@@ -1,5 +1,7 @@
 #include "ExampleAIModule.h"
 #include <iostream>
+#include "../OrderQueue.h"
+#include "../StrategyManager.h"
 
 using namespace BWAPI;
 using namespace Filter;
@@ -70,6 +72,7 @@ void ExampleAIModule::onStart()
 			Broodwar << "The matchup is " << Broodwar->self()->getRace() << " vs " << Broodwar->enemy()->getRace() << std::endl;
 	}
 
+	StrategyManager::Instance().Start();
 }
 
 void ExampleAIModule::onEnd(bool isWinner)
@@ -97,7 +100,10 @@ void ExampleAIModule::onFrame()
 	// Latency frames are the number of frames before commands are processed.
 	if (Broodwar->getFrameCount() % Broodwar->getLatencyFrames() != 0)
 		return;
-
+	
+	StrategyManager::Instance().Update();
+	
+	/*
 	// Iterate through all the units that we own
 	for (auto &u : Broodwar->self()->getUnits())
 	{
@@ -158,11 +164,9 @@ void ExampleAIModule::onFrame()
 					if (scouting.scout->getPosition() != scouting.goTo){
 						Broodwar->sendText("Scout moving !");
 					}
-					//else{
-					Broodwar->sendText("Scout begin to move !");
+
 					scouting.goTo = Position(200, 200);
 					scouting.scout->move(scouting.goTo);
-					//}
 					continue;
 				}
 				// Order workers carrying a resource to return them to the center,
@@ -254,6 +258,7 @@ void ExampleAIModule::onFrame()
 		}
 
 	} // closure: unit iterator
+	*/
 }
 
 void ExampleAIModule::onSendText(std::string text)
