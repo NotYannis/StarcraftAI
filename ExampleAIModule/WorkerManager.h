@@ -1,10 +1,14 @@
 #pragma once
 
 #include "Common.h"
+#include "OrderQueue.h"
+#include "StrategyManager.h"
 
 class WorkerManager
 {
 public:
+	std::map <Unit, Card*> workersJob;
+
 	Unit * workersGas;
 	Unit * workersCristal;
 	Unit * workersBuilder;
@@ -35,9 +39,15 @@ public:
 	void HandleWorkersBuilder();
 	void HandleWorkersIdle();
 
+	void SetWorkerToJob(Unit u, Card * c);
+	void updateRessourceCard(Unit u, Card * c);
+
+
 	WorkerManager();
 	~WorkerManager();
 
 	static WorkerManager & Instance();
+
+	
 };
 

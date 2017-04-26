@@ -9,21 +9,21 @@ struct Card{
 	int quantity = 0;		//Quantity of ressources to gather
 	bool isGas = false;
 	bool blocking;		//Is it a blocking order or not ?
-	BWAPI::Unit * unit;	//The unit used for the task
+	BWAPI::Unit unit;	//The unit used for the task
 
 	Card(){	}
 
 	//Constructor for gathering ressources
-	Card(int p, int q, bool g, bool b, BWAPI::Unit * u){
+	Card(int p, int q, bool g, bool b, BWAPI::Unit u){
 		priority = p;
-		quantity = q;
+		quantity = q / 8;
 		isGas = g;
 		blocking = b;
 		unit = u;
 	}
 
 	//Constructor for creating something (building, unit, research)
-	Card(BWAPI::Unit t, int p, bool b, BWAPI::Unit * u){
+	Card(BWAPI::Unit t, int p, bool b, BWAPI::Unit u){
 		target = t;
 		priority = p;
 		blocking = b;
@@ -51,6 +51,8 @@ class OrderQueue{
 
 		OrderQueue();
 		~OrderQueue();
+		static OrderQueue & Instance();
+
 		Card * getHighestPriority(); //Return the highest priority card
 
 		void addCard(Card card); //Add a card to the queue

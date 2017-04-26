@@ -193,7 +193,8 @@ void WorkerManager::HandleWorkersCristal(){
 			if (workersCristal[i]->isCarryingMinerals()){
 				workersCristal[i]->returnCargo();
 			}
-			else{
+			else
+			{
 				workersCristal[i]->gather(workersCristal[i]->getClosestUnit(IsMineralField));
 			}
 		}
@@ -217,4 +218,17 @@ void WorkerManager::HandleWorkerScout(){
 
 void WorkerManager::HandleWorkersBuilder(){
 
+}
+
+void WorkerManager::SetWorkerToJob(Unit u, Card * c){
+	workersJob.insert(std::pair<Unit, Card*>(u, c));
+}
+
+void WorkerManager::updateRessourceCard(Unit u, Card * c){
+	--c->quantity;
+	if (c->quantity == 0){
+		workersJob.erase(u);
+		SetWorkerCristal(u);
+		StrategyManager::Instance().cardDone(c);
+	}
 }

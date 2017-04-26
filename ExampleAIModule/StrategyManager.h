@@ -2,12 +2,15 @@
 
 #include "Common.h"
 #include "WorkerManager.h"
+#include "OrderQueue.h"
 
 class StrategyManager
 {
 public:
 	Unit cargo;
+	Card * workingCards;
 
+	int workingCardsCount;
 
 	StrategyManager();
 	~StrategyManager();
@@ -16,5 +19,6 @@ public:
 
 	void Start();
 	void Update();
+	void cardDone(Card * c);
 };
 

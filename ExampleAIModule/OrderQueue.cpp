@@ -8,6 +8,10 @@ OrderQueue::~OrderQueue(){
 	delete[] list;
 }
 
+OrderQueue & OrderQueue::Instance(){
+	static OrderQueue orderQueue;
+	return orderQueue;
+}
 
 //Return the card with the highest priority
 Card * OrderQueue::getHighestPriority(){
@@ -26,6 +30,7 @@ void OrderQueue::addCard(Card card){
 	list[cardCount] = card;
 	++cardCount;
 }
+
 //Remove a card from the queue
 void OrderQueue::removeCard(Card card){
 	bool found = false;
@@ -36,8 +41,8 @@ void OrderQueue::removeCard(Card card){
 				found = true;
 			}
 		}
-		else{
-			list[i - 1] == list[i];
+		else if(i < cardCount - 1){
+			list[i] == list[i + 1];
 		}
 	}
 
