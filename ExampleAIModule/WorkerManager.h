@@ -2,7 +2,6 @@
 
 #include "Common.h"
 #include "OrderQueue.h"
-#include "StrategyManager.h"
 
 class WorkerManager
 {
@@ -13,7 +12,7 @@ public:
 	Unit * workersCristal;
 	Unit * workersBuilder;
 	Unit * workersIdle;
-	Unit * workersScout;
+	Unit * workersScout;	
 
 	int wGasCount;
 	int wCristalsCount;

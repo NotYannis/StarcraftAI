@@ -1,5 +1,5 @@
 #include "StrategyManager.h"
-#include "OrderQueue.h"
+#include "Common.h"
 
 StrategyManager::StrategyManager()
 {
@@ -39,7 +39,6 @@ void StrategyManager::Start(){
 
 	for each (TilePosition tilePosition in Broodwar->getStartLocations())
 	{
-
 		if (tilePosition != Broodwar->self()->getStartLocation()) {
 			Card scoutingCard = Card((Position)tilePosition, 100, false, u);
 			OrderQueue::Instance().addCard(scoutingCard);

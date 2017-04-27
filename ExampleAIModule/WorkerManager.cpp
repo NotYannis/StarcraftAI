@@ -1,4 +1,5 @@
 #include "WorkerManager.h"
+#include "StrategyManager.h"
 
 WorkerManager::WorkerManager()
 {
@@ -218,8 +219,7 @@ void WorkerManager::HandleWorkerScout(){
 	}
 	else
 	{
-		OrderQueue::Instance().removeCard(*card);
-		card = OrderQueue::Instance().getHighestPriority();
+		StrategyManager::Instance().cardDone(card);
 	}
 }
 
