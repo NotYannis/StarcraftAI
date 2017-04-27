@@ -42,7 +42,7 @@
     <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">false</LinkIncremental>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
-    <OutDir>D:\Projets\Enjmin\StarCraft\bwapi-data\AI\</OutDir>
+    <OutDir>C:\Users\Jean\Documents\StarCraft\bwapi-data\AI</OutDir>
     <IntDir>$(Configuration)\</IntDir>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">

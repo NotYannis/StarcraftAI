@@ -7,7 +7,7 @@
 class WorkerManager
 {
 public:
-	std::map <Unit, Card*> workersJob;
+	std::map <Unit, Card> workersJob;
 
 	Unit * workersGas;
 	Unit * workersCristal;
@@ -22,7 +22,7 @@ public:
 	int wScoutsCount;
 
 	Unit * GetClosestWorkerIdle(PositionOrUnit pos);
-	Unit * GetClosestWorkerCristal(PositionOrUnit pos);
+	Unit GetClosestWorkerCristal(PositionOrUnit pos);
 	Unit * GetClosestWorkerBuilder(PositionOrUnit pos);
 	Unit * GetClosestWorkerGas(PositionOrUnit pos);
 	Unit * GetClosestWorkerScout(PositionOrUnit pos);
@@ -39,15 +39,13 @@ public:
 	void HandleWorkersBuilder();
 	void HandleWorkersIdle();
 
-	void SetWorkerToJob(Unit u, Card * c);
-	void updateRessourceCard(Unit u, Card * c);
+	void SetWorkerToJob(Unit u, Card c);
+	void removeCard(Unit u, Card * c);
 
 
 	WorkerManager();
 	~WorkerManager();
 
 	static WorkerManager & Instance();
-
-	
 };
 

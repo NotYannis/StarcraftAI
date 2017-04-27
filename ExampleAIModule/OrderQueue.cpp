@@ -14,14 +14,14 @@ OrderQueue & OrderQueue::Instance(){
 }
 
 //Return the card with the highest priority
-Card * OrderQueue::getHighestPriority(){
-	Card * high;
+Card OrderQueue::getHighestPriority(){
+	Card high;
 	for (int i = 0; i < cardCount; ++i){
-		if (high < &list[i]){
-			high = &list[i];
+		if (high < list[i]){
+			high = list[i];
 		}
 	}
-	
+
 	return high;
 }
 
@@ -35,13 +35,13 @@ void OrderQueue::addCard(Card card){
 void OrderQueue::removeCard(Card card){
 	bool found = false;
 
-	for(int i = 0; i < cardCount; ++i){
+	for (int i = 0; i < cardCount; ++i){
 		if (!found){
-			if(card == list[i]){
+			if (card == list[i]){
 				found = true;
 			}
 		}
-		else if(i < cardCount - 1){
+		else if (i < cardCount - 1){
 			list[i] == list[i + 1];
 		}
 	}
