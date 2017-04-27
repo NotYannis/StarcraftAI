@@ -76,16 +76,16 @@ Unit WorkerManager::GetClosestWorkerCristal(PositionOrUnit pos){
 	return u;
 }
 
-Unit * WorkerManager::GetClosestWorkerBuilder(PositionOrUnit pos){
+Unit WorkerManager::GetClosestWorkerBuilder(PositionOrUnit pos){
 	double distance = 20000;
-	Unit * u;
+	Unit u;
 	int index = 0;
 
 	//Search for the nearest worker 
 	for (int i = 0; i < wBuildersCount; ++i){
 		if (workersBuilder[i]->getDistance(pos) < distance){
 			distance = workersBuilder[i]->getDistance(pos);
-			u = &workersBuilder[i];
+			u = workersBuilder[i];
 			index = i;
 		}
 	}

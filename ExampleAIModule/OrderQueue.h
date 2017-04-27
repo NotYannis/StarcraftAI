@@ -7,7 +7,7 @@ enum CardType{ build, scout};
 struct Card{
 	CardType type;
 	UnitType target; //Unit to build
-	int priority = 0;		//Priority of the card
+	int priority = -1;		//Priority of the card
 	TilePosition pos = TilePosition(0, 0);		//Quantity of ressources to gather
 	Position m_position;
 	bool blocking;		//Is it a blocking order or not ?
@@ -21,13 +21,12 @@ struct Card{
 	///<param name="po">Position of the building</param>
 	///<param name="b">Is it a blocking order</param>
 	///<param name="u">The unit used for the order</param>
-	Card(BWAPI::UnitType t, int p, TilePosition po, bool b, BWAPI::Unit u){
+	Card(BWAPI::UnitType t, int p, TilePosition po, bool b){
 		type = build;
 		target = t;
 		priority = p;
 		pos = po;
 		blocking = b;
-		unit = u;
 	}
 
 	Card(Position position, int p, bool b, BWAPI::Unit u){
@@ -64,5 +63,6 @@ public:
 	Card getHighestPriority(CardType type); //Return the highest priority card
 
 	void addCard(Card card); //Add a card to the queue
+	Card GetBuildingCard(UnitType building);
 	void removeCard(Card card); //Remove a card from the queue
 };
