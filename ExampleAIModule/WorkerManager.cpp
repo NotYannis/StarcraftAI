@@ -219,7 +219,12 @@ void WorkerManager::HandleWorkerScout(){
 	for (int i = 0; i < wScoutsCount; ++i){
 		if (workersScout[i]->isIdle()){
 			Card job = workersJob.at(workersScout[i]);
-			workersScout[i]->move(job.m_position);
+			if (workersScout[i]->getPosition() != job.m_position) {
+				workersScout[i]->move(job.m_position);
+			}
+			else {
+				//workersJob.(workersScout[i]);
+			}
 			Broodwar << job.m_position.x << " " << job.m_position.y << std::endl;
 			Broodwar << Broodwar->self()->getStartLocation().x << " " << Broodwar->self()->getStartLocation().y << std::endl;
 		}
