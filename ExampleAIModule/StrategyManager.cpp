@@ -1,5 +1,4 @@
 #include "StrategyManager.h"
-#include "OrderQueue.h"
 
 StrategyManager::StrategyManager()
 {
@@ -28,10 +27,6 @@ void StrategyManager::Start(){
 	for (auto & u : Broodwar->self()->getUnits()){
 		if (u->getType().isWorker()){
 			WorkerManager::Instance().SetWorkerCristal(u);
-			Card crystalCard = Card(10, 100, false, false, u);
-			OrderQueue::Instance().addCard(crystalCard);
-			WorkerManager::Instance().SetWorkerToJob(u, &crystalCard);
-			workingCards[workingCardsCount] = crystalCard; ++workingCardsCount;
 		}
 	}
 
@@ -39,31 +34,39 @@ void StrategyManager::Start(){
 
 	for each (TilePosition tilePosition in Broodwar->getStartLocations())
 	{
-
 		if (tilePosition != Broodwar->self()->getStartLocation()) {
 			Card scoutingCard = Card((Position)tilePosition, 100, false, u);
 			OrderQueue::Instance().addCard(scoutingCard);
-			WorkerManager::Instance().SetWorkerToJob(u, &scoutingCard);
 		}
 	}
-	WorkerManager::Instance().HandleWorkerScout();
+	Card highestPrio = OrderQueue::Instance().getHighestPriority();
+	WorkerManager::Instance().SetWorkerToJob(u, highestPrio);
+	WorkerManager::Instance().SetWorkerScout(u);
 }
 
 void StrategyManager::Update(){
-
+	WorkerManager::Instance().HandleWorkerScout();
+	WorkerManager::Instance().HandleWorkersBuilder();
 	WorkerManager::Instance().HandleWorkersCristal();
-	//WorkerManager::Instance().HandleWorkerScout();
+	if (Broodwar->self()->minerals() >= UnitTypes::Protoss_Assimilator.mineralPrice() && WorkerManager::Instance().wBuildersCount == 0)
+	{
+		TilePosition gasTyle = Broodwar->getBuildLocation(UnitTypes::Protoss_Assimilator, cargo->getTilePosition());
+		Unit u = WorkerManager::Instance().GetClosestWorkerCristal(Position(gasTyle.x, gasTyle.y));
+		Card c = Card(UnitTypes::Protoss_Assimilator, 10, gasTyle, false, u);
+		WorkerManager::Instance().SetWorkerToJob(u, c);
+		WorkerManager::Instance().SetWorkerBuilder(u);
+	}
 }
 
 void StrategyManager::cardDone(Card * c){
 	bool found = false;
 	for (int i = 0; i < workingCardsCount; ++i){
-		if(!found){
+		if (!found){
 			if (workingCards[i] == *c){
 				found = true;
 			}
 		}
-		else if (i < workingCardsCount -1){
+		else if (i < workingCardsCount - 1){
 			workingCards[i] = workingCards[i + 1];
 		}
 	}
