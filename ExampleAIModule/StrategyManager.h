@@ -1,8 +1,6 @@
 #pragma once
 
 #include "Common.h"
-#include "WorkerManager.h"
-#include "OrderQueue.h"
 
 class StrategyManager
 {
@@ -21,4 +19,3 @@ public:
 	void Update();
 	void cardDone(Card * c);
 };
-

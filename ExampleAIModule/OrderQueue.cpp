@@ -14,10 +14,10 @@ OrderQueue & OrderQueue::Instance(){
 }
 
 //Return the card with the highest priority
-Card OrderQueue::getHighestPriority(){
+Card OrderQueue::getHighestPriority(CardType type){
 	Card high;
 	for (int i = 0; i < cardCount; ++i){
-		if (high < list[i]){
+		if (high < list[i] && list[i].type == type){
 			high = list[i];
 		}
 	}

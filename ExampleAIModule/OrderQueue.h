@@ -2,8 +2,10 @@
 
 #include "Common.h"
 
+enum CardType{ build, scout};
 //Structure used to give an order to a unit.
 struct Card{
+	CardType type;
 	UnitType target; //Unit to build
 	int priority = 0;		//Priority of the card
 	TilePosition pos = TilePosition(0, 0);		//Quantity of ressources to gather
@@ -20,6 +22,7 @@ struct Card{
 	///<param name="b">Is it a blocking order</param>
 	///<param name="u">The unit used for the order</param>
 	Card(BWAPI::UnitType t, int p, TilePosition po, bool b, BWAPI::Unit u){
+		type = build;
 		target = t;
 		priority = p;
 		pos = po;
@@ -28,6 +31,7 @@ struct Card{
 	}
 
 	Card(Position position, int p, bool b, BWAPI::Unit u){
+		type = scout;
 		m_position = position;
 		priority = p;
 		blocking = b;
@@ -41,8 +45,8 @@ struct Card{
 
 	bool operator==(const Card &c) const
 	{
-		return target == c.target && priority == c.priority && pos == c.pos
-			&& blocking == c.blocking && unit == c.unit;
+		return type == c.type &&  target == c.target && priority == c.priority
+			&& pos == c.pos && blocking == c.blocking && unit == c.unit;
 	}
 };
 
@@ -57,7 +61,7 @@ public:
 	~OrderQueue();
 	static OrderQueue & Instance();
 
-	Card getHighestPriority(); //Return the highest priority card
+	Card getHighestPriority(CardType type); //Return the highest priority card
 
 	void addCard(Card card); //Add a card to the queue
 	void removeCard(Card card); //Remove a card from the queue
