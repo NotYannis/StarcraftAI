@@ -48,11 +48,11 @@ void StrategyManager::Update(){
 	WorkerManager::Instance().HandleWorkerScout();
 	WorkerManager::Instance().HandleWorkersBuilder();
 	WorkerManager::Instance().HandleWorkersCristal();
-	if (Broodwar->self()->minerals() >= UnitTypes::Protoss_Assimilator.mineralPrice() && WorkerManager::Instance().wBuildersCount == 0)
+	if (Broodwar->self()->minerals() >= UnitTypes::Protoss_Pylon.mineralPrice() && WorkerManager::Instance().wBuildersCount == 0)
 	{
-		TilePosition gasTyle = Broodwar->getBuildLocation(UnitTypes::Protoss_Assimilator, cargo->getTilePosition());
+		TilePosition gasTyle = Broodwar->getBuildLocation(UnitTypes::Protoss_Pylon, cargo->getTilePosition());
 		Unit u = WorkerManager::Instance().GetClosestWorkerCristal(Position(gasTyle.x, gasTyle.y));
-		Card c = Card(UnitTypes::Protoss_Assimilator, 10, gasTyle, false, u);
+		Card c = Card(UnitTypes::Protoss_Pylon, 10, gasTyle, false, u);
 		WorkerManager::Instance().SetWorkerToJob(u, c);
 		WorkerManager::Instance().SetWorkerBuilder(u);
 	}

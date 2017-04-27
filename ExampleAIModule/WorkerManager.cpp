@@ -230,10 +230,16 @@ void WorkerManager::HandleWorkerScout(){
 void WorkerManager::HandleWorkersBuilder(){
 	for (int i = 0; i < wBuildersCount; ++i){
 		if (workersBuilder[i]->isIdle()){
-			Broodwar << workersJob.at(workersBuilder[i]).target << std::endl;
 			Card job = workersJob.at(workersBuilder[i]);
-			workersBuilder[i]->build(job.target, job.pos);
+			if (workersBuilder[i]->getDistance(workersBuilder[i]->getClosestUnit(job.target)) < 10){
+				workersBuilder[i]->build(job.target, job.pos);
+				Broodwar << workersBuilder[i]->getOrder() << std::endl;
+			}
+			else{
+				//HERE : erase card, Then IF il y en a une autre, go, ELSE goCrystal MEC !!
+			}
 		}
+		
 	}
 }
 
@@ -241,6 +247,6 @@ void WorkerManager::SetWorkerToJob(Unit u, Card c){
 	workersJob.insert(std::pair<Unit, Card>(u, c));
 }
 
-void WorkerManager::removeCard(Unit u, Card * c){
+void WorkerManager::removeCard(Unit u, Card c){
 
 }
