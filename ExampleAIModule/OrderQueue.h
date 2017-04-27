@@ -61,7 +61,7 @@ public:
 	~OrderQueue();
 	static OrderQueue & Instance();
 
-	Card getHighestPriority(); //Return the highest priority card
+	Card getHighestPriority(CardType type); //Return the highest priority card
 
 	void addCard(Card card); //Add a card to the queue
 	void removeCard(Card card); //Remove a card from the queue

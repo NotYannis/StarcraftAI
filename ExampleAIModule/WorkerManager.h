@@ -1,8 +1,6 @@
 #pragma once
 
 #include "Common.h"
-#include "OrderQueue.h"
-#include "StrategyManager.h"
 
 class WorkerManager
 {
