@@ -8,6 +8,11 @@ OrderQueue::~OrderQueue(){
 	delete[] list;
 }
 
+OrderQueue & OrderQueue::Instance()
+{
+	static OrderQueue instance;
+	return instance;
+}
 
 //Return the card with the highest priority
 Card * OrderQueue::getHighestPriority(){

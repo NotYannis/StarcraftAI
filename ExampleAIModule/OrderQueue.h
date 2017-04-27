@@ -4,12 +4,12 @@
 
 //Structure used to give an order to a unit.
 struct Card{
-	Unit target; //Unit to build
+	UnitType target; //Unit to build
 	int priority = 0;		//Priority of the card
 	int quantity = 0;		//Quantity of ressources to gather
 	bool isGas = false;
 	bool blocking;		//Is it a blocking order or not ?
-	BWAPI::Unit * unit;	//The unit used for the task
+	//BWAPI::Unit * unit;	//The unit used for the task
 
 	Card(){	}
 
@@ -19,15 +19,15 @@ struct Card{
 		quantity = q;
 		isGas = g;
 		blocking = b;
-		unit = u;
+		//unit = u;
 	}
 
 	//Constructor for creating something (building, unit, research)
-	Card(BWAPI::Unit t, int p, bool b, BWAPI::Unit * u){
+	Card(BWAPI::UnitType t, int p, bool b/*, BWAPI::Unit * u*/){
 		target = t;
 		priority = p;
 		blocking = b;
-		unit = u;
+		//unit = u;
 	}
 
 	bool operator<(const Card &x) const
@@ -38,7 +38,7 @@ struct Card{
 	bool operator==(const Card &c) const
 	{
 		return target == c.target && priority == c.priority && quantity == c.quantity
-			&& isGas == c.isGas && blocking == c.blocking && unit == c.unit;
+			&& isGas == c.isGas && blocking == c.blocking;// && unit == c.unit;
 	}
 };
 
@@ -52,6 +52,8 @@ class OrderQueue{
 		OrderQueue();
 		~OrderQueue();
 		Card * getHighestPriority(); //Return the highest priority card
+
+		static OrderQueue & Instance();
 
 		void addCard(Card card); //Add a card to the queue
 		void removeCard(Card card); //Remove a card from the queue

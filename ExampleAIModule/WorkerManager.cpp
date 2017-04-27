@@ -1,4 +1,5 @@
 #include "WorkerManager.h"
+#include "MapGrid.h"
 
 
 WorkerManager::WorkerManager()
@@ -212,9 +213,22 @@ void WorkerManager::HandleWorkersGas(){
 }
 
 void WorkerManager::HandleWorkerScout(){
-
+	for (int i = 0; i < wScoutsCount; ++i) {
+		workersScout[i]->move(MapGrid::Instance().cases[0].pos);
+	}
 }
 
-void WorkerManager::HandleWorkersBuilder(){
+void WorkerManager::HandleWorkersBuilder(UnitType unitType){
+	/*static int lastChecked = 0;
 
+	for (int i = 0; i < wBuildersCount; ++i) {
+		if (lastChecked + 400 < Broodwar->getFrameCount() &&
+			Broodwar->self()->incompleteUnitCount(supplyProviderType) == 0 &&
+			Broodwar->self()->minerals() > unitType) {
+
+			lastChecked = Broodwar->getFrameCount();
+
+			workersBuilder[i]->build(unitType);
+		}
+	}*/
 }

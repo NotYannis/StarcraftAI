@@ -32,7 +32,7 @@ public:
 	void HandleWorkersCristal();
 	void HandleWorkersGas();
 	void HandleWorkerScout();
-	void HandleWorkersBuilder();
+	void HandleWorkersBuilder(UnitType unitType);
 	void HandleWorkersIdle();
 
 	WorkerManager();
