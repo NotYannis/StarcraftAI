@@ -98,7 +98,6 @@
     <ClCompile Include="BuildingOrder.cpp" />
     <ClCompile Include="Case.cpp" />
     <ClCompile Include="Common.cpp" />
-    <ClCompile Include="MapGrid.cpp" />
     <ClCompile Include="OrderQueue.cpp" />
     <ClCompile Include="Source\Dll.cpp" />
     <ClCompile Include="Source\ExampleAIModule.cpp" />
@@ -109,7 +108,6 @@
     <ClInclude Include="BuildingOrder.h" />
     <ClInclude Include="Case.h" />
     <ClInclude Include="Common.h" />
-    <ClInclude Include="MapGrid.h" />
     <ClInclude Include="OrderQueue.h" />
     <ClInclude Include="Source\ExampleAIModule.h" />
     <ClInclude Include="StrategyManager.h" />

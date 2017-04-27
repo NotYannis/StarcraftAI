@@ -22,7 +22,7 @@ public:
 	int wScoutsCount;
 
 	Unit * GetClosestWorkerIdle(PositionOrUnit pos);
-	Unit * GetClosestWorkerCristal(PositionOrUnit pos);
+	Unit  GetClosestWorkerCristal(PositionOrUnit pos);
 	Unit * GetClosestWorkerBuilder(PositionOrUnit pos);
 	Unit * GetClosestWorkerGas(PositionOrUnit pos);
 	Unit * GetClosestWorkerScout(PositionOrUnit pos);

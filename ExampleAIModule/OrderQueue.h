@@ -10,6 +10,7 @@ struct Card{
 	bool isGas = false;
 	bool blocking;		//Is it a blocking order or not ?
 	BWAPI::Unit unit;	//The unit used for the task
+	Position m_position;
 
 	Card(){	}
 
@@ -25,6 +26,13 @@ struct Card{
 	//Constructor for creating something (building, unit, research)
 	Card(BWAPI::Unit t, int p, bool b, BWAPI::Unit u){
 		target = t;
+		priority = p;
+		blocking = b;
+		unit = u;
+	}
+
+	Card(Position position, int p, bool b, BWAPI::Unit u){
+		m_position = position;
 		priority = p;
 		blocking = b;
 		unit = u;

@@ -1,6 +1,4 @@
 #include "WorkerManager.h"
-#include "MapGrid.h"
-
 
 WorkerManager::WorkerManager()
 {
@@ -52,7 +50,7 @@ Unit * WorkerManager::GetClosestWorkerIdle(PositionOrUnit pos){
 	return u;
 }
 
-Unit * WorkerManager::GetClosestWorkerCristal(PositionOrUnit pos){
+Unit WorkerManager::GetClosestWorkerCristal(PositionOrUnit pos){
 	double distance = 20000;
 	Unit * u;
 	int index = 0;
@@ -74,7 +72,7 @@ Unit * WorkerManager::GetClosestWorkerCristal(PositionOrUnit pos){
 
 	--wIdleCount;
 
-	return u;
+	return *u;
 }
 
 Unit * WorkerManager::GetClosestWorkerBuilder(PositionOrUnit pos){
@@ -214,8 +212,14 @@ void WorkerManager::HandleWorkersGas(){
 }
 
 void WorkerManager::HandleWorkerScout(){
-	for (int i = 0; i < wScoutsCount; ++i) {
-		workersScout[i]->move(MapGrid::Instance().cases[0].pos);
+	Card * card = OrderQueue::Instance().getHighestPriority();
+	if (card->unit->getPosition() != card->m_position) {
+		card->unit->move(card->m_position);
+	}
+	else
+	{
+		OrderQueue::Instance().removeCard(*card);
+		card = OrderQueue::Instance().getHighestPriority();
 	}
 }
 
