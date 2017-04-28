@@ -3,12 +3,15 @@
 #include "../Common.h"
 #include "../StrategyManager.h"
 #include "../WorkerManager.h"
+#include "../WarManager.h"
 
 using namespace BWAPI;
 using namespace Filter;
 
-bool firstDepot = false;
+bool assimilator = false;
+bool stopProduction = false;
 int workersOnGas = 0;
+WarManager *war;
 
 class Scouting{
 	public :
@@ -70,8 +73,8 @@ void ExampleAIModule::onStart()
 		if (Broodwar->enemy()) // First make sure there is an enemy
 			Broodwar << "The matchup is " << Broodwar->self()->getRace() << " vs " << Broodwar->enemy()->getRace() << std::endl;
 	}
-
 	StrategyManager::Instance().Start();
+	war = new WarManager(5);
 }
 
 void ExampleAIModule::onEnd(bool isWinner)
@@ -101,6 +104,7 @@ void ExampleAIModule::onFrame()
 		return;
 	
 	StrategyManager::Instance().Update();
+	war->Update();
 	
 	/*
 	// Iterate through all the units that we own
@@ -333,14 +337,8 @@ void ExampleAIModule::onUnitCreate(BWAPI::Unit unit)
 		}
 	}
 
-	if (unit->getType().isBuilding() && unit->getPlayer() == Broodwar->self()){
-		if (!firstDepot){
-			firstDepot = true;
-		}
-		else{
-			BuildingManager::Instance().OnBuildingCreate(unit);
-		}
-			
+	if (unit->getType().isBuilding()){
+		BuildingManager::Instance().OnBuildingCreate(unit->getType());
 	}
 }
 
@@ -374,7 +372,8 @@ void ExampleAIModule::onSaveGame(std::string gameName)
 
 void ExampleAIModule::onUnitComplete(BWAPI::Unit unit)
 {
-	if (unit->getType().isBuilding() && unit->getPlayer() == Broodwar->self()){
+	if (unit->getType().isBuilding()){
 		BuildingManager::Instance().OnBuildingComplete(unit->getType());
 	}
+	war->Update(unit);
 }
