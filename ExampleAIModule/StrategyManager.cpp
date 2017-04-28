@@ -43,9 +43,11 @@ void StrategyManager::Start(){
 	WorkerManager::Instance().SetWorkerToJob(u, highestPrio);
 	WorkerManager::Instance().SetWorkerScout(u);*/
 
-	Card c = Card(UnitTypes::Protoss_Pylon, 20, cargo->getTilePosition(), false);
+	Card c = Card(UnitTypes::Protoss_Pylon, 20, Broodwar->getBuildLocation(UnitTypes::Protoss_Pylon, cargo->getTilePosition()), false);
+	Card d = Card(UnitTypes::Protoss_Gateway, 15, Broodwar->getBuildLocation(UnitTypes::Protoss_Gateway, cargo->getTilePosition()), false);
 
 	OrderQueue::Instance().addCard(c);
+	OrderQueue::Instance().addCard(d);
 }
 
 void StrategyManager::Update(){
