@@ -6,7 +6,7 @@
 class WorkerManager
 {
 public:
-	std::map <Unit, Card> workersJob;
+	std::map <Unit, Card *> workersJob;
 
 	Unit * workersGas;
 	Unit * workersCristal;

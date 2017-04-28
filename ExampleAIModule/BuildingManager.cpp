@@ -20,6 +20,7 @@ BuildingManager & BuildingManager::Instance(){
 void BuildingManager::GetNextCard(){
 	if (OrderQueue::Instance().cardCount > 0){
 		Card * c = OrderQueue::Instance().getHighestPriority(build);
+		//Broodwar << c->target.c_str() << std::endl;
 		if (!c->blocking && c->priority != -1 && Broodwar->self()->minerals() - ressourcesNeeded > c->target.mineralPrice()){
 			ressourcesNeeded += c->target.mineralPrice();
 			Unit u = WorkerManager::Instance().GetClosestWorkerCristal(Position(c->pos.x, c->pos.y));
@@ -33,20 +34,21 @@ void BuildingManager::GetNextCard(){
 
 void BuildingManager::OnBuildingCreate(Unit u){
 	ressourcesNeeded -= u->getType().mineralPrice();
-	Card c = OrderQueue::Instance().GetBuildingCard(u->getType());
-	if (c.priority != -1){
-		Broodwar << ressourcesNeeded  << std::endl;
+	Card * c = OrderQueue::Instance().GetBuildingCard(u->getType());
 
-		Unit u2 = WorkerManager::Instance().GetClosestWorkerBuilder(c.unit);
-		WorkerManager::Instance().SetWorkerCristal(c.unit);
+	if (c->priority != -1){
+		Unit u2 = WorkerManager::Instance().GetClosestWorkerBuilder(c->unit);
+		WorkerManager::Instance().SetWorkerCristal(c->unit);
 		Card * c2 = OrderQueue::Instance().getSecondHighestPriority(build);
-		c2->pos = Broodwar->getBuildLocation(c2->target, u->getTilePosition());
+		c2->pos = Broodwar->getBuildLocation(UnitTypes::Protoss_Gateway, u->getTilePosition());
 	}
 }
 
-void BuildingManager::OnBuildingComplete(UnitType ut){
-	Card c = OrderQueue::Instance().GetBuildingCard(ut);
-	if (c.priority != -1){
-		OrderQueue::Instance().removeCard(OrderQueue::Instance().GetBuildingCard(ut));
+void BuildingManager::OnBuildingComplete(Unit u){
+	Card * c = OrderQueue::Instance().GetBuildingCard(u->getType());
+	if (c->priority != -1){
+		OrderQueue::Instance().removeCard(OrderQueue::Instance().GetBuildingCard(u->getType()));
+		Card * c2 = OrderQueue::Instance().getSecondHighestPriority(build);
+		c2->pos = Broodwar->getBuildLocation(UnitTypes::Protoss_Gateway, u->getTilePosition());
 	}
 }

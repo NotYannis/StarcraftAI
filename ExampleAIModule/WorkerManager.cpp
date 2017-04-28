@@ -218,10 +218,8 @@ void WorkerManager::HandleWorkersGas(){
 void WorkerManager::HandleWorkerScout(){
 	for (int i = 0; i < wScoutsCount; ++i){
 		if (workersScout[i]->isIdle()){
-			Card job = workersJob.at(workersScout[i]);
-			workersScout[i]->move(job.m_position);
-			Broodwar << job.m_position.x << " " << job.m_position.y << std::endl;
-			Broodwar << Broodwar->self()->getStartLocation().x << " " << Broodwar->self()->getStartLocation().y << std::endl;
+			Card * job = workersJob.at(workersScout[i]);
+			workersScout[i]->move(job->m_position);
 		}
 	}
 }
@@ -230,14 +228,14 @@ void WorkerManager::HandleWorkerScout(){
 void WorkerManager::HandleWorkersBuilder(){
 	for (int i = 0; i < wBuildersCount; ++i){
 		if (workersBuilder[i]->isIdle()){
-			Card job = workersJob.at(workersBuilder[i]);
-			workersBuilder[i]->build(job.target, job.pos);
+			Card * job = workersJob.at(workersBuilder[i]);
+			workersBuilder[i]->build(job->target, job->pos);
 		}
 	}
 }
 
 void WorkerManager::SetWorkerToJob(Unit u, Card * c){
-	workersJob.insert(std::pair<Unit, Card>(u, *c));
+	workersJob.insert(std::pair<Unit, Card * >(u, c));
 }
 
 void WorkerManager::removeCard(Unit u, Card * c){

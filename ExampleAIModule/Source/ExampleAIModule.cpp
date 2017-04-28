@@ -333,13 +333,9 @@ void ExampleAIModule::onUnitCreate(BWAPI::Unit unit)
 		}
 	}
 
-	if (unit->getType().isBuilding() && unit->getPlayer() == Broodwar->self()){
-		if (!firstDepot){
-			firstDepot = true;
-		}
-		else{
-			BuildingManager::Instance().OnBuildingCreate(unit);
-		}
+	if (firstDepot && unit->getType().isBuilding() && unit->getPlayer() == Broodwar->self()){
+		BuildingManager::Instance().OnBuildingCreate(unit);
+		
 			
 	}
 }
@@ -375,6 +371,11 @@ void ExampleAIModule::onSaveGame(std::string gameName)
 void ExampleAIModule::onUnitComplete(BWAPI::Unit unit)
 {
 	if (unit->getType().isBuilding() && unit->getPlayer() == Broodwar->self()){
-		BuildingManager::Instance().OnBuildingComplete(unit->getType());
+		if (!firstDepot){
+			firstDepot = true;
+		}
+		else{
+			BuildingManager::Instance().OnBuildingComplete(unit);
+		}
 	}
 }

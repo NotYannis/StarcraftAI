@@ -45,28 +45,29 @@ void OrderQueue::addCard(Card card){
 	++cardCount;
 }
 
-Card OrderQueue::GetBuildingCard(UnitType building){
+Card * OrderQueue::GetBuildingCard(UnitType building){
+	Card * c = &(Card());
 	for (int i = 0; i < cardCount; ++i){
 		if (list[i].target == building){
-			return list[i];
+			return &list[i];
 		}
 	}
-	return Card();
+	return c;
 }
 
 //Remove a card from the queue
-void OrderQueue::removeCard(Card card){
+void OrderQueue::removeCard(Card * card){
 	bool found = false;
 
 	for (int i = 0; i < cardCount; ++i){
 		if (!found){
-			if (card == list[i]){
-				Broodwar << "Card found : " << card.priority;
+			if (card == &list[i]){
 				found = true;
+				list[i] = Card();
 			}
 		}
-		else if (i < cardCount - 1){
-			list[i] == list[i + 1];
+		if(found){
+			list[i] = list[i + 1];
 		}
 	}
 

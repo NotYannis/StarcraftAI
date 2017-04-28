@@ -16,6 +16,6 @@ public:
 
 	void GetNextCard();
 	void OnBuildingCreate(Unit u);
-	void OnBuildingComplete(UnitType u);
+	void OnBuildingComplete(Unit u);
 };
 

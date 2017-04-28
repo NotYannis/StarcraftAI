@@ -44,10 +44,12 @@ void StrategyManager::Start(){
 	WorkerManager::Instance().SetWorkerScout(u);*/
 
 	Card c = Card(UnitTypes::Protoss_Pylon, 20, Broodwar->getBuildLocation(UnitTypes::Protoss_Pylon, cargo->getTilePosition()), false);
-	Card d = Card(UnitTypes::Protoss_Gateway, 15, Broodwar->getBuildLocation(UnitTypes::Protoss_Gateway, cargo->getTilePosition()), false);
+	Card d = Card(UnitTypes::Protoss_Gateway, 19, Broodwar->getBuildLocation(UnitTypes::Protoss_Gateway, TilePosition(0, 0)), false);
+	Card e = Card(UnitTypes::Protoss_Pylon, 18, Broodwar->getBuildLocation(UnitTypes::Protoss_Pylon, cargo->getTilePosition()), false);
 
 	OrderQueue::Instance().addCard(c);
 	OrderQueue::Instance().addCard(d);
+	OrderQueue::Instance().addCard(e);
 }
 
 void StrategyManager::Update(){

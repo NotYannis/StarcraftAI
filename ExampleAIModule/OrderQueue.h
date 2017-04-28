@@ -66,6 +66,6 @@ public:
 
 
 	void addCard(Card card); //Add a card to the queue
-	Card GetBuildingCard(UnitType building);
-	void removeCard(Card card); //Remove a card from the queue
+	Card * GetBuildingCard(UnitType building);
+	void removeCard(Card * card); //Remove a card from the queue
 };
