@@ -1,8 +1,7 @@
 #include "OrderQueue.h"
 
 OrderQueue::OrderQueue() {
-	list = new Card[100];
-	cardCount = 0;
+	list = new Card[100]; cardCount = 1;
 }
 OrderQueue::~OrderQueue(){
 	delete[] list;
@@ -14,10 +13,10 @@ OrderQueue & OrderQueue::Instance(){
 }
 
 //Return the card with the highest priority
-Card OrderQueue::getHighestPriority(){
+Card OrderQueue::getHighestPriority(CardType type){
 	Card high;
 	for (int i = 0; i < cardCount; ++i){
-		if (high < list[i]){
+		if (high < list[i] && list[i].type == type){
 			high = list[i];
 		}
 	}
@@ -28,7 +27,16 @@ Card OrderQueue::getHighestPriority(){
 //Add a card to the queue
 void OrderQueue::addCard(Card card){
 	list[cardCount] = card;
-	++cardCount;
+	//cardCount += 1;
+}
+
+Card OrderQueue::GetBuildingCard(UnitType building){
+	for (int i = 0; i < cardCount; ++i){
+		if (list[i].target == building){
+			return list[i];
+		}
+	}
+	return Card();
 }
 
 //Remove a card from the queue

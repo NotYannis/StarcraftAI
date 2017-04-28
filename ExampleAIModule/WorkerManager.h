@@ -2,7 +2,6 @@
 
 #include "Common.h"
 #include "OrderQueue.h"
-#include "StrategyManager.h"
 
 class WorkerManager
 {
@@ -23,7 +22,7 @@ public:
 
 	Unit * GetClosestWorkerIdle(PositionOrUnit pos);
 	Unit GetClosestWorkerCristal(PositionOrUnit pos);
-	Unit * GetClosestWorkerBuilder(PositionOrUnit pos);
+	Unit GetClosestWorkerBuilder(PositionOrUnit pos);
 	Unit * GetClosestWorkerGas(PositionOrUnit pos);
 	Unit * GetClosestWorkerScout(PositionOrUnit pos);
 

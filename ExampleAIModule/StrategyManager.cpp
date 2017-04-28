@@ -30,7 +30,7 @@ void StrategyManager::Start(){
 		}
 	}
 
-	Unit u = WorkerManager::Instance().GetClosestWorkerCristal(cargo);
+	/*Unit u = WorkerManager::Instance().GetClosestWorkerCristal(cargo);
 
 	for each (TilePosition tilePosition in Broodwar->getStartLocations())
 	{
@@ -39,23 +39,20 @@ void StrategyManager::Start(){
 			OrderQueue::Instance().addCard(scoutingCard);
 		}
 	}
-	Card highestPrio = OrderQueue::Instance().getHighestPriority();
+	Card highestPrio = OrderQueue::Instance().getHighestPriority(scout);
 	WorkerManager::Instance().SetWorkerToJob(u, highestPrio);
-	WorkerManager::Instance().SetWorkerScout(u);
+	WorkerManager::Instance().SetWorkerScout(u);*/
+
+	Card c = Card(UnitTypes::Protoss_Pylon, 20, cargo->getTilePosition(), false);
+
+	OrderQueue::Instance().addCard(c);
 }
 
 void StrategyManager::Update(){
 	WorkerManager::Instance().HandleWorkerScout();
 	WorkerManager::Instance().HandleWorkersBuilder();
 	WorkerManager::Instance().HandleWorkersCristal();
-	if (Broodwar->self()->minerals() >= UnitTypes::Protoss_Pylon.mineralPrice() && WorkerManager::Instance().wBuildersCount == 0)
-	{
-		TilePosition gasTyle = Broodwar->getBuildLocation(UnitTypes::Protoss_Pylon, cargo->getTilePosition());
-		Unit u = WorkerManager::Instance().GetClosestWorkerCristal(Position(gasTyle.x, gasTyle.y));
-		Card c = Card(UnitTypes::Protoss_Pylon, 10, gasTyle, false, u);
-		WorkerManager::Instance().SetWorkerToJob(u, c);
-		WorkerManager::Instance().SetWorkerBuilder(u);
-	}
+	BuildingManager::Instance().GetNextCard();
 }
 
 void StrategyManager::cardDone(Card * c){

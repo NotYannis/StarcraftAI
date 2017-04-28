@@ -1,7 +1,8 @@
 #include "ExampleAIModule.h"
 #include <iostream>
-#include "../OrderQueue.h"
+#include "../Common.h"
 #include "../StrategyManager.h"
+#include "../WorkerManager.h"
 
 using namespace BWAPI;
 using namespace Filter;
@@ -332,6 +333,10 @@ void ExampleAIModule::onUnitCreate(BWAPI::Unit unit)
 			Broodwar->sendText("%.2d:%.2d: %s creates a %s", minutes, seconds, unit->getPlayer()->getName().c_str(), unit->getType().c_str());
 		}
 	}
+
+	if (unit->getType().isBuilding()){
+		BuildingManager::Instance().OnBuildingCreate(unit->getType());
+	}
 }
 
 void ExampleAIModule::onUnitDestroy(BWAPI::Unit unit)
@@ -364,4 +369,7 @@ void ExampleAIModule::onSaveGame(std::string gameName)
 
 void ExampleAIModule::onUnitComplete(BWAPI::Unit unit)
 {
+	if (unit->getType().isBuilding()){
+		BuildingManager::Instance().OnBuildingComplete(unit->getType());
+	}
 }
