@@ -1,11 +1,12 @@
 #include "WarManager.h"
 
 
-WarManager::WarManager(int nzis, Position eb)
+WarManager::WarManager(int nzis)
 {
 	nbZealotInSquad = nzis;
-	enemyBase = eb;
+	found = false;
 	nbZealotReadyPerGateway = new std::vector<std::pair<Unit, int>>();
+	squadsManager = new std::vector<CombatManager>();
 	Gateways.getUnitsInRadius(9999, Filter::IsBuilding);
 	for each (Unit u in Gateways)
 	{
@@ -52,6 +53,7 @@ void WarManager::SendSquads()
 			Unitset newSquad;
 			newSquad.getUnitsInRadius(nbZealot.first->getType().sightRange(), Filter::CanMove && Filter::CanAttack);
 			CombatManager* squad = new CombatManager(newSquad);
+			squadsManager->push_back(*squad);
 			squad->MoveSquadTo(enemyBase);
 		}
 	}
@@ -74,7 +76,8 @@ void WarManager::CheckZealots(Unit u)
 			}
 			++cpt;
 		}
-		SendSquads();
+		if (found)
+			SendSquads();
 	}
 }
 
@@ -82,4 +85,21 @@ void WarManager::Update(Unit u)
 {
 	AddGateway(u);
 	CheckZealots(u);
+}
+
+void WarManager::Update()
+{
+	if (found)
+	{
+		for each (CombatManager squad in *squadsManager)
+		{
+			squad.UpdateCombatManager();
+		}
+	}
+}
+
+void WarManager::EnemyBaseFound(Position pos)
+{
+	enemyBase = pos;
+	found = true;
 }
