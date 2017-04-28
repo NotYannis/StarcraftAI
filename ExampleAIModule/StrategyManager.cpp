@@ -43,6 +43,14 @@ void StrategyManager::Start(){
 	WorkerManager::Instance().SetWorkerToJob(u, highestPrio);
 	WorkerManager::Instance().SetWorkerScout(u);*/
 
+	for each (TilePosition tilePosition in Broodwar->getStartLocations())
+	{
+		if (tilePosition != Broodwar->self()->getStartLocation()) {
+			Card scoutCard = Card((Position)tilePosition, 10, false);
+			OrderQueue::Instance().addCard(scoutCard);
+		}
+	}
+
 	Card c = Card(UnitTypes::Protoss_Pylon, 20, Broodwar->getBuildLocation(UnitTypes::Protoss_Pylon, cargo->getTilePosition()), false);
 	Card d = Card(UnitTypes::Protoss_Gateway, 19, Broodwar->getBuildLocation(UnitTypes::Protoss_Gateway, TilePosition(0, 0)), false);
 	Card e = Card(UnitTypes::Protoss_Pylon, 18, Broodwar->getBuildLocation(UnitTypes::Protoss_Pylon, cargo->getTilePosition()), false);

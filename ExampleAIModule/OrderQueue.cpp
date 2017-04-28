@@ -1,7 +1,7 @@
 #include "OrderQueue.h"
 
 OrderQueue::OrderQueue() {
-	list = new Card[100]; cardCount = 0;
+	list = new Card[100]; scoutCardCount = 0; buildCardCount = 0;
 	highestPriority = 0;
 }
 OrderQueue::~OrderQueue(){
@@ -13,6 +13,8 @@ OrderQueue & OrderQueue::Instance(){
 	return orderQueue;
 }
 
+/*
+OLD
 //Return the card with the highest priority
 Card * OrderQueue::getHighestPriority(CardType type){
 	Card * high = &Card();
@@ -25,13 +27,26 @@ Card * OrderQueue::getHighestPriority(CardType type){
 	highestPriority = high->priority;
 
 	return high;
-}
+}*/
 
 //Return the card with the highest priority
 Card * OrderQueue::getSecondHighestPriority(CardType type){
 	Card * high = &Card();
-	for (int i = 0; i < cardCount; ++i){
+	for (int i = 0; i < scoutCardCount + buildCardCount - 1; ++i){
 		if (high->priority < highestPriority && high->priority < list[i].priority && list[i].type == type){
+			high = &list[i];
+		}
+	}
+
+	return high;
+}
+
+//NEW
+//Return the card with the highest priority
+Card * OrderQueue::getHighestPriority(CardType type){
+	Card * high;
+	for (int i = 0; i < scoutCardCount + buildCardCount - 1; ++i){
+		if (high < &list[i] && list[i].type == type){
 			high = &list[i];
 		}
 	}
@@ -41,13 +56,14 @@ Card * OrderQueue::getSecondHighestPriority(CardType type){
 
 //Add a card to the queue
 void OrderQueue::addCard(Card card){
-	list[cardCount] = card;
-	++cardCount;
+	list[scoutCardCount + buildCardCount - 1] = card;
+	if (card.type == scout) ++scoutCardCount;
+	else ++buildCardCount;
 }
 
 Card * OrderQueue::GetBuildingCard(UnitType building){
 	Card * c = &(Card());
-	for (int i = 0; i < cardCount; ++i){
+	for (int i = 0; i < scoutCardCount + buildCardCount - 1; ++i){
 		if (list[i].target == building){
 			return &list[i];
 		}
@@ -59,7 +75,7 @@ Card * OrderQueue::GetBuildingCard(UnitType building){
 void OrderQueue::removeCard(Card * card){
 	bool found = false;
 
-	for (int i = 0; i < cardCount; ++i){
+	for (int i = 0; i < scoutCardCount + buildCardCount - 1; ++i){
 		if (!found){
 			if (card == &list[i]){
 				found = true;
@@ -71,5 +87,6 @@ void OrderQueue::removeCard(Card * card){
 		}
 	}
 
-	--cardCount;
+	if (card->target == scout) --scoutCardCount;
+	else --buildCardCount;
 }

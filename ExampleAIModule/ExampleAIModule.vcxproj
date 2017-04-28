@@ -42,7 +42,7 @@
     <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">false</LinkIncremental>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
-    <OutDir>C:\Users\Jean\Documents\StarCraft\StarcraftAI\bwapi-data\AI</OutDir>
+    <OutDir>C:\Users\Jean\Documents\StarCraft\bwapi-data\AI</OutDir>
     <IntDir>$(Configuration)\</IntDir>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
@@ -96,19 +96,25 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="BuildingManager.cpp" />
+    <ClCompile Include="CombatManager.cpp" />
     <ClCompile Include="Common.cpp" />
     <ClCompile Include="OrderQueue.cpp" />
     <ClCompile Include="Source\Dll.cpp" />
     <ClCompile Include="Source\ExampleAIModule.cpp" />
     <ClCompile Include="StrategyManager.cpp" />
+    <ClCompile Include="Timer.cpp" />
+    <ClCompile Include="WarManager.cpp" />
     <ClCompile Include="WorkerManager.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="BuildingManager.h" />
+    <ClInclude Include="CombatManager.h" />
     <ClInclude Include="Common.h" />
     <ClInclude Include="OrderQueue.h" />
     <ClInclude Include="Source\ExampleAIModule.h" />
     <ClInclude Include="StrategyManager.h" />
+    <ClInclude Include="Timer.h" />
+    <ClInclude Include="WarManager.h" />
     <ClInclude Include="WorkerManager.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

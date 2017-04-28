@@ -9,6 +9,11 @@ using namespace Filter;
 class Common
 {
 public:
+
+	Position enemyposition;
+
+	static Common & Instance();
+
 	Common();
 	~Common();
 };

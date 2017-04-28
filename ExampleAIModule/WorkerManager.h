@@ -12,7 +12,7 @@ public:
 	Unit * workersCristal;
 	Unit * workersBuilder;
 	Unit * workersIdle;
-	Unit * workersScout;
+	Unit * workersScout;	
 
 	int wGasCount;
 	int wCristalsCount;
@@ -24,7 +24,7 @@ public:
 	Unit GetClosestWorkerCristal(PositionOrUnit pos);
 	Unit GetClosestWorkerBuilder(PositionOrUnit pos);
 	Unit * GetClosestWorkerGas(PositionOrUnit pos);
-	Unit * GetClosestWorkerScout(PositionOrUnit pos);
+	Unit GetClosestWorkerScout(PositionOrUnit pos);
 
 	void SetWorkerIdle(Unit u);
 	void SetWorkerCristal(Unit u);
@@ -40,7 +40,6 @@ public:
 
 	void SetWorkerToJob(Unit u, Card * c);
 	void removeCard(Unit u, Card * c);
-
 
 	WorkerManager();
 	~WorkerManager();

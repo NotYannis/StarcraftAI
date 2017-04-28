@@ -1,4 +1,5 @@
 #include "WorkerManager.h"
+#include "StrategyManager.h"
 
 
 WorkerManager::WorkerManager()
@@ -58,6 +59,7 @@ Unit WorkerManager::GetClosestWorkerCristal(PositionOrUnit pos){
 
 	//Search for the nearest worker
 	for (int i = 0; i < wCristalsCount; ++i){
+		workersCristal[i]->stop();
 		if (workersCristal[i]->getDistance(pos) < distance){
 			distance = workersCristal[i]->getDistance(pos);
 			u = workersCristal[i];
@@ -65,10 +67,9 @@ Unit WorkerManager::GetClosestWorkerCristal(PositionOrUnit pos){
 		}
 	}
 
-	u->stop();
-
 	//Reorganize the array
 	for (int i = index; i < wCristalsCount; ++i){
+		workersCristal[i] = Unit();
 		workersCristal[i] = workersCristal[i + 1];
 	}
 
@@ -126,16 +127,16 @@ Unit * WorkerManager::GetClosestWorkerGas(PositionOrUnit pos){
 	return u;
 }
 
-Unit * WorkerManager::GetClosestWorkerScout(PositionOrUnit pos){
+Unit WorkerManager::GetClosestWorkerScout(PositionOrUnit pos){
 	double distance = 20000;
-	Unit * u;
+	Unit u;
 	int index = 0;
 
 	//Search for the nearest worker 
 	for (int i = 0; i < wScoutsCount; ++i){
 		if (workersScout[i]->getDistance(pos) < distance){
 			distance = workersScout[i]->getDistance(pos);
-			u = &workersScout[i];
+			u = workersScout[i];
 			index = i;
 		}
 	}
@@ -216,13 +217,65 @@ void WorkerManager::HandleWorkersGas(){
 }
 
 void WorkerManager::HandleWorkerScout(){
-	for (int i = 0; i < wScoutsCount; ++i){
-		if (workersScout[i]->isIdle()){
-			Card * job = workersJob.at(workersScout[i]);
-			workersScout[i]->move(job->m_position);
+	if (OrderQueue::Instance().scoutCardCount > 0) {
+		Card * c = OrderQueue::Instance().getHighestPriority(scout);
+		if (!c->blocking && c->priority != -1) {
+			if (wScoutsCount > 0)
+			{
+				Unit u = GetClosestWorkerScout(c->m_position);
+				c->unit = u;
+				SetWorkerToJob(u, c);
+				SetWorkerScout(u);
+			}
+			else
+			{
+				if (workersCristal > 0) {
+					Unit u = GetClosestWorkerCristal(c->m_position);
+					c->unit = u;
+					SetWorkerToJob(u, c);
+					SetWorkerScout(u);
+				}
+			}
+			c->blocking = true;
+		}
+		else{
+			if (c->unit->getPosition() != c->m_position) {
+				c->unit->move(c->m_position);
+				//Unit unitsetgdr = c->unit->getClosestUnit(IsEnemy);//getUnitsInRadius(/*c->unit->getType().sightRange(), IsEnemy*/20);
+				//Broodwar << unitsetgdr << std::endl;
+				/*if (!c->unit->getUnitsInRadius(c->unit->getType().sightRange(), IsEnemy).empty()) {
+					Common::Instance().enemyposition = c->unit->getPosition();
+					OrderQueue::Instance().removeCard(*c);
+				}*/
+			}
+			else
+			{
+				OrderQueue::Instance().removeCard(c);
+			}
 		}
 	}
 }
+
+
+	/*for (int i = 0; i < wScoutsCount; ++i){
+		if (workersScout[i]->isIdle()){
+<<<<<<< HEAD
+			Card * job = workersJob.at(workersScout[i]);
+			workersScout[i]->move(job->m_position);
+=======
+			Card job = workersJob.at(workersScout[i]);
+			if (workersScout[i]->getPosition() != job.m_position) {
+				workersScout[i]->move(job.m_position);
+			}
+			else {
+				//workersJob.(workersScout[i]);
+			}
+			Broodwar << job.m_position.x << " " << job.m_position.y << std::endl;
+			Broodwar << Broodwar->self()->getStartLocation().x << " " << Broodwar->self()->getStartLocation().y << std::endl;
+>>>>>>> 9d96c26f2fa9d00df034bc301039f2a7bddea8b8
+		}
+	}*/
+//}
 
 
 void WorkerManager::HandleWorkersBuilder(){

@@ -18,9 +18,9 @@ BuildingManager & BuildingManager::Instance(){
 }
 
 void BuildingManager::GetNextCard(){
-	if (OrderQueue::Instance().cardCount > 0){
+	if (OrderQueue::Instance().buildCardCount > 0){
 		Card * c = OrderQueue::Instance().getHighestPriority(build);
-		//Broodwar << c->target.c_str() << std::endl;
+		
 		if (!c->blocking && c->priority != -1 && Broodwar->self()->minerals() - ressourcesNeeded > c->target.mineralPrice()){
 			ressourcesNeeded += c->target.mineralPrice();
 			Unit u = WorkerManager::Instance().GetClosestWorkerCristal(Position(c->pos.x, c->pos.y));
