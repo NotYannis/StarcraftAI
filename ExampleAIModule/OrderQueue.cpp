@@ -64,7 +64,6 @@ Card OrderQueue::GetBuildingCard(UnitType building){
 	for (int i = 0; i < cardCount; ++i){
 		if (list[i].target == building){
 			return list[i];
-			Broodwar << "Card Found !" << std::endl;
 		}
 	}
 	return Card();
@@ -77,6 +76,7 @@ void OrderQueue::removeCard(Card card){
 	for (int i = 0; i < cardCount; ++i){
 		if (!found){
 			if (card == list[i]){
+				Broodwar << "Card found : " << card.priority;
 				found = true;
 			}
 		}
