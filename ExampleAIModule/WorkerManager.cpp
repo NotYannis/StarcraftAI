@@ -127,16 +127,16 @@ Unit * WorkerManager::GetClosestWorkerGas(PositionOrUnit pos){
 	return u;
 }
 
-Unit * WorkerManager::GetClosestWorkerScout(PositionOrUnit pos){
+Unit WorkerManager::GetClosestWorkerScout(PositionOrUnit pos){
 	double distance = 20000;
-	Unit * u;
+	Unit u;
 	int index = 0;
 
 	//Search for the nearest worker 
 	for (int i = 0; i < wScoutsCount; ++i){
 		if (workersScout[i]->getDistance(pos) < distance){
 			distance = workersScout[i]->getDistance(pos);
-			u = &workersScout[i];
+			u = workersScout[i];
 			index = i;
 		}
 	}
@@ -217,21 +217,42 @@ void WorkerManager::HandleWorkersGas(){
 }
 
 void WorkerManager::HandleWorkerScout(){
-	if (OrderQueue::Instance().cardCount > 0){
-		Card * c = OrderQueue::Instance().getHighestPriority(scout);
-		if (!c->blocking && c->priority != -1) {
-			Unit u = WorkerManager::Instance().GetClosestWorkerCristal(c->m_position);
-			c->unit = u;
-			WorkerManager::Instance().SetWorkerToJob(u, c);
-			WorkerManager::Instance().SetWorkerScout(u);
-			c->blocking = true;
-		}
-		else{
-			if (c->unit->getPosition() != c->m_position) {
-				c->unit->move(c->m_position);
+	if (OrderQueue::Instance().cardCount > 0) {
+		if (OrderQueue::Instance().scoutCardCount > 0) {
+			Card * c = OrderQueue::Instance().getHighestPriority(scout);
+			if (!c->blocking && c->priority != -1) {
+				if (wScoutsCount > 0)
+				{
+					Unit u = GetClosestWorkerScout(c->m_position);
+					c->unit = u;
+					SetWorkerToJob(u, c);
+					SetWorkerScout(u);
+				}
+				else
+				{
+					if (workersCristal > 0) {
+						Unit u = GetClosestWorkerCristal(c->m_position);
+						c->unit = u;
+						SetWorkerToJob(u, c);
+						SetWorkerScout(u);
+					}
+				}
+				c->blocking = true;
 			}
-			else {
-				OrderQueue::Instance().removeCard(*c);
+			else{
+				if (c->unit->getPosition() != c->m_position) {
+					c->unit->move(c->m_position);
+					//Unit unitsetgdr = c->unit->getClosestUnit(IsEnemy);//getUnitsInRadius(/*c->unit->getType().sightRange(), IsEnemy*/20);
+					//Broodwar << unitsetgdr << std::endl;
+					/*if (!c->unit->getUnitsInRadius(c->unit->getType().sightRange(), IsEnemy).empty()) {
+						Common::Instance().enemyposition = c->unit->getPosition();
+						OrderQueue::Instance().removeCard(*c);
+					}*/
+				}
+				else
+				{
+					OrderQueue::Instance().removeCard(*c);
+				}
 			}
 		}
 	}

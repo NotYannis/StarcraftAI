@@ -54,6 +54,7 @@ class OrderQueue{
 public:
 	Card * list;
 	int cardCount;
+	int scoutCardCount = 0;
 	int highestPriority;
 
 	OrderQueue();
