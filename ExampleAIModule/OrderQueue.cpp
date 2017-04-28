@@ -27,7 +27,7 @@ Card * OrderQueue::getHighestPriority(CardType type){
 	highestPriority = high->priority;
 
 	return high;
-}
+}*/
 
 //Return the card with the highest priority
 Card * OrderQueue::getSecondHighestPriority(CardType type){
@@ -39,7 +39,7 @@ Card * OrderQueue::getSecondHighestPriority(CardType type){
 	}
 
 	return high;
-}*/
+}
 
 //NEW
 //Return the card with the highest priority

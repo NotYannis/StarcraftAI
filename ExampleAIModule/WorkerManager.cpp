@@ -59,6 +59,7 @@ Unit WorkerManager::GetClosestWorkerCristal(PositionOrUnit pos){
 
 	//Search for the nearest worker
 	for (int i = 0; i < wCristalsCount; ++i){
+		workersCristal[i]->stop();
 		if (workersCristal[i]->getDistance(pos) < distance){
 			distance = workersCristal[i]->getDistance(pos);
 			u = workersCristal[i];
@@ -66,10 +67,9 @@ Unit WorkerManager::GetClosestWorkerCristal(PositionOrUnit pos){
 		}
 	}
 
-	u->stop();
-
 	//Reorganize the array
 	for (int i = index; i < wCristalsCount; ++i){
+		workersCristal[i] = Unit();
 		workersCristal[i] = workersCristal[i + 1];
 	}
 
@@ -219,20 +219,20 @@ void WorkerManager::HandleWorkersGas(){
 void WorkerManager::HandleWorkerScout(){
 	if (OrderQueue::Instance().cardCount > 0){
 		Card * c = OrderQueue::Instance().getHighestPriority(scout);
-	}
-	if (!c->blocking && c->priority != -1) {
-		Unit u = WorkerManager::Instance().GetClosestWorkerCristal(c->m_position);
-		c->unit = u;
-		WorkerManager::Instance().SetWorkerToJob(u, *c);
-		WorkerManager::Instance().SetWorkerScout(u);
-		c->blocking = true;
-	}
-	else{
-		if (c->unit->getPosition() != c->m_position) {
-			c->unit->move(c->m_position);
+		if (!c->blocking && c->priority != -1) {
+			Unit u = WorkerManager::Instance().GetClosestWorkerCristal(c->m_position);
+			c->unit = u;
+			WorkerManager::Instance().SetWorkerToJob(u, c);
+			WorkerManager::Instance().SetWorkerScout(u);
+			c->blocking = true;
 		}
-		else {
-			OrderQueue::Instance().removeCard(*c);
+		else{
+			if (c->unit->getPosition() != c->m_position) {
+				c->unit->move(c->m_position);
+			}
+			else {
+				OrderQueue::Instance().removeCard(*c);
+			}
 		}
 	}
 }
@@ -257,11 +257,10 @@ void WorkerManager::HandleWorkerScout(){
 void WorkerManager::HandleWorkersBuilder(){
 	for (int i = 0; i < wBuildersCount; ++i){
 		if (workersBuilder[i]->isIdle()){
+			Broodwar << workersJob.at(workersBuilder[i]).target << std::endl;
 			Card job = workersJob.at(workersBuilder[i]);
-			Broodwar << workersBuilder[i]->getOrder() << std::endl;
 			workersBuilder[i]->build(job.target, job.pos);
 		}
-		//Broodwar << i << std::endl;
 	}
 }
 

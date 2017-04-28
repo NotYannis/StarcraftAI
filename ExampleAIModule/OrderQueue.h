@@ -29,12 +29,11 @@ struct Card{
 		blocking = b;
 	}
 
-	Card(Position position, int p, bool b, BWAPI::Unit u){
+	Card(Position position, int p, bool b){
 		type = scout;
 		m_position = position;
 		priority = p;
 		blocking = b;
-		unit = u;
 	}
 
 	bool operator<(const Card &x) const
