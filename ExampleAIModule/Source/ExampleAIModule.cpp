@@ -335,7 +335,7 @@ void ExampleAIModule::onUnitCreate(BWAPI::Unit unit)
 	}
 
 	if (unit->getType().isBuilding()){
-		BuildingManager::Instance().OnBuildingCreate(unit->getType());
+		//BuildingManager::Instance().OnBuildingCreate(unit->getType());
 	}
 }
 

@@ -19,12 +19,12 @@ BuildingManager & BuildingManager::Instance(){
 
 void BuildingManager::GetNextCard(){
 	if (OrderQueue::Instance().cardCount > 0){
-		Card c = OrderQueue::Instance().getHighestPriority(build);
-		if (Broodwar->self()->minerals() - ressourcesNeeded > c.target.mineralPrice()){
-			ressourcesNeeded += c.target.mineralPrice();
-			Unit u = WorkerManager::Instance().GetClosestWorkerCristal(Position(c.pos.x, c.pos.y));
-			c.unit = u;
-			WorkerManager::Instance().SetWorkerToJob(u, c);
+		Card *c = OrderQueue::Instance().getHighestPriority(build);
+		if (Broodwar->self()->minerals() - ressourcesNeeded > c->target.mineralPrice()){
+			ressourcesNeeded += c->target.mineralPrice();
+			Unit u = WorkerManager::Instance().GetClosestWorkerCristal(Position(c->pos.x, c->pos.y));
+			c->unit = u;
+			WorkerManager::Instance().SetWorkerToJob(u, *c);
 			WorkerManager::Instance().SetWorkerBuilder(u);
 		}
 	}

@@ -1,4 +1,5 @@
 #include "WorkerManager.h"
+#include "StrategyManager.h"
 
 
 WorkerManager::WorkerManager()
@@ -216,7 +217,28 @@ void WorkerManager::HandleWorkersGas(){
 }
 
 void WorkerManager::HandleWorkerScout(){
-	for (int i = 0; i < wScoutsCount; ++i){
+	if (OrderQueue::Instance().cardCount > 0){
+		Card * c = OrderQueue::Instance().getHighestPriority(scout);
+	}
+	if (!c->blocking && c->priority != -1) {
+		Unit u = WorkerManager::Instance().GetClosestWorkerCristal(c->m_position);
+		c->unit = u;
+		WorkerManager::Instance().SetWorkerToJob(u, *c);
+		WorkerManager::Instance().SetWorkerScout(u);
+		c->blocking = true;
+	}
+	else{
+		if (c->unit->getPosition() != c->m_position) {
+			c->unit->move(c->m_position);
+		}
+		else {
+			OrderQueue::Instance().removeCard(*c);
+		}
+	}
+}
+
+
+	/*for (int i = 0; i < wScoutsCount; ++i){
 		if (workersScout[i]->isIdle()){
 			Card job = workersJob.at(workersScout[i]);
 			if (workersScout[i]->getPosition() != job.m_position) {
@@ -228,8 +250,8 @@ void WorkerManager::HandleWorkerScout(){
 			Broodwar << job.m_position.x << " " << job.m_position.y << std::endl;
 			Broodwar << Broodwar->self()->getStartLocation().x << " " << Broodwar->self()->getStartLocation().y << std::endl;
 		}
-	}
-}
+	}*/
+//}
 
 
 void WorkerManager::HandleWorkersBuilder(){
