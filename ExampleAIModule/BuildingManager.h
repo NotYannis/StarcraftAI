@@ -15,7 +15,7 @@ public:
 
 
 	void GetNextCard();
-	void OnBuildingCreate(UnitType u);
+	void OnBuildingCreate(Unit u);
 	void OnBuildingComplete(UnitType u);
 };
 

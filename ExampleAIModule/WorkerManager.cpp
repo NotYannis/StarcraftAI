@@ -58,7 +58,6 @@ Unit WorkerManager::GetClosestWorkerCristal(PositionOrUnit pos){
 
 	//Search for the nearest worker
 	for (int i = 0; i < wCristalsCount; ++i){
-		workersCristal[i]->stop();
 		if (workersCristal[i]->getDistance(pos) < distance){
 			distance = workersCristal[i]->getDistance(pos);
 			u = workersCristal[i];
@@ -66,9 +65,10 @@ Unit WorkerManager::GetClosestWorkerCristal(PositionOrUnit pos){
 		}
 	}
 
+	u->stop();
+
 	//Reorganize the array
 	for (int i = index; i < wCristalsCount; ++i){
-		workersCristal[i] = Unit();
 		workersCristal[i] = workersCristal[i + 1];
 	}
 
@@ -230,15 +230,16 @@ void WorkerManager::HandleWorkerScout(){
 void WorkerManager::HandleWorkersBuilder(){
 	for (int i = 0; i < wBuildersCount; ++i){
 		if (workersBuilder[i]->isIdle()){
-			Broodwar << workersJob.at(workersBuilder[i]).target << std::endl;
 			Card job = workersJob.at(workersBuilder[i]);
+			Broodwar << workersBuilder[i]->getOrder() << std::endl;
 			workersBuilder[i]->build(job.target, job.pos);
 		}
+		//Broodwar << i << std::endl;
 	}
 }
 
-void WorkerManager::SetWorkerToJob(Unit u, Card c){
-	workersJob.insert(std::pair<Unit, Card>(u, c));
+void WorkerManager::SetWorkerToJob(Unit u, Card * c){
+	workersJob.insert(std::pair<Unit, Card>(u, *c));
 }
 
 void WorkerManager::removeCard(Unit u, Card * c){
