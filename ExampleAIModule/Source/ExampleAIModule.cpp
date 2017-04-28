@@ -7,8 +7,7 @@
 using namespace BWAPI;
 using namespace Filter;
 
-bool assimilator = false;
-bool stopProduction = false;
+bool firstDepot = false;
 int workersOnGas = 0;
 
 class Scouting{
@@ -334,8 +333,14 @@ void ExampleAIModule::onUnitCreate(BWAPI::Unit unit)
 		}
 	}
 
-	if (unit->getType().isBuilding()){
-		//BuildingManager::Instance().OnBuildingCreate(unit->getType());
+	if (unit->getType().isBuilding() && unit->getPlayer() == Broodwar->self()){
+		if (!firstDepot){
+			firstDepot = true;
+		}
+		else{
+			BuildingManager::Instance().OnBuildingCreate(unit);
+		}
+			
 	}
 }
 
@@ -369,7 +374,7 @@ void ExampleAIModule::onSaveGame(std::string gameName)
 
 void ExampleAIModule::onUnitComplete(BWAPI::Unit unit)
 {
-	if (unit->getType().isBuilding()){
+	if (unit->getType().isBuilding() && unit->getPlayer() == Broodwar->self()){
 		BuildingManager::Instance().OnBuildingComplete(unit->getType());
 	}
 }

@@ -29,11 +29,12 @@ struct Card{
 		blocking = b;
 	}
 
-	Card(Position position, int p, bool b){
+	Card(Position position, int p, bool b, BWAPI::Unit u){
 		type = scout;
 		m_position = position;
 		priority = p;
 		blocking = b;
+		unit = u;
 	}
 
 	bool operator<(const Card &x) const
@@ -54,12 +55,15 @@ class OrderQueue{
 public:
 	Card * list;
 	int cardCount;
+	int highestPriority;
 
 	OrderQueue();
 	~OrderQueue();
 	static OrderQueue & Instance();
 
 	Card * getHighestPriority(CardType type); //Return the highest priority card
+	Card * getSecondHighestPriority(CardType type); //Return the second highest priority card
+
 
 	void addCard(Card card); //Add a card to the queue
 	Card GetBuildingCard(UnitType building);

@@ -38,7 +38,7 @@ public:
 	void HandleWorkersBuilder();
 	void HandleWorkersIdle();
 
-	void SetWorkerToJob(Unit u, Card c);
+	void SetWorkerToJob(Unit u, Card * c);
 	void removeCard(Unit u, Card * c);
 
 
