@@ -19,7 +19,7 @@ BuildingManager & BuildingManager::Instance(){
 
 void BuildingManager::GetNextCard(){
 	if (OrderQueue::Instance().buildCardCount > 0){
-		Card * c = OrderQueue::Instance().getHighestPriority(build);
+		/*Card * c = OrderQueue::Instance().getHighestPriority(build);
 		
 		if (!c->blocking && c->priority != -1 && Broodwar->self()->minerals() - ressourcesNeeded > c->target.mineralPrice()){
 			ressourcesNeeded += c->target.mineralPrice();
@@ -28,7 +28,7 @@ void BuildingManager::GetNextCard(){
 			c->blocking = true;
 			WorkerManager::Instance().SetWorkerToJob(u, c);
 			WorkerManager::Instance().SetWorkerBuilder(u);
-		}
+		}*/
 	}
 }
 
