@@ -64,7 +64,7 @@ void StrategyManager::Update(){
 	WorkerManager::Instance().HandleWorkerScout();
 	WorkerManager::Instance().HandleWorkersBuilder();
 	WorkerManager::Instance().HandleWorkersCristal();
-	BuildingManager::Instance().GetNextCard();
+	//BuildingManager::Instance().GetNextCard();
 }
 
 void StrategyManager::cardDone(Card * c){
