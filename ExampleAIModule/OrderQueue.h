@@ -2,81 +2,96 @@
 
 #include "Common.h"
 
-//Structure used to give a building order to a unit
-struct CardBuild{
-	UnitType target;						//Unit to build
-	int priority = -1;						//Priority of the card
-	TilePosition position = TilePosition(0, 0);	//Position where we want the building to be built
-	BWAPI::Unit unit;						//The unit affected to the task
-	bool onUse = false;						//Has it be affected or not ?
+//Base structure used to give any kind of order to a unit
+struct Card 
+{
+	int priority = -1;	//Priority of the card
+	Unit unit;			//The unit affected to the task
+	TilePosition tilePosition;	//Position where we want to build or scout
+	bool onUse = false;	//Has it be affected or not ?
 
-	CardBuild(){ }
+	Card(){}
+
+	Card(int _priority, Unit _unit, TilePosition _tilePosition) {
+		priority = _priority;
+		unit = _unit;
+		tilePosition = _tilePosition;
+	}
+
+	bool operator<(const Card &c) const {
+		return priority < c.priority;
+	}
+
+	bool operator==(const Card &c) const {
+		return priority == c.priority &&
+			unit == c.unit &&
+			tilePosition == c.tilePosition &&
+			onUse == c.onUse;
+	}
+};
+
+//Structure used to give a building order to a unit
+struct CardBuild : Card 
+{
+	UnitType target;			//Unit to build
+
+	CardBuild(){}
 
 	///<summary>Structure used to give a building order to a unit</summary>
-	CardBuild(BWAPI::UnitType _target, int _priority, TilePosition _position){
+	CardBuild(int _priority, Unit _unit, Position _position, UnitType _target) {
 		target = _target;
-		priority = _priority;
-		position = _position;
 	}
 
-	bool operator<(const CardBuild &x) const
-	{
-		return priority < x.priority;
-	}
-
-	bool operator==(const CardBuild &c) const
-	{
-		return target == c.target && priority == c.priority
-			&& position == c.position && onUse == c.onUse && unit == c.unit;
+	bool operator==(const CardBuild &c) const {
+		return priority == c.priority &&
+			unit == c.unit &&
+			tilePosition == c.tilePosition &&
+			onUse == c.onUse &&
+			target == c.target;
 	}
 };
 
 //Structure used to give a scouting order to a unit
-struct CardScout{
-	int priority = -1;	//Priority of the card
-	Position position;	//Position to scout
-	BWAPI::Unit unit;	//The unit used for the task
-	bool onUse = false;	//Has it be affected or not ?
-
-	CardScout(){	}
+struct CardScout : Card 
+{
+	CardScout(){}
 
 	///<summary>Structure used to give a scouting order to a unit</summary>
-	CardScout(Position _position, int _priority){
-		position = _position;
+	CardScout(int _priority, Unit _unit, TilePosition _tilePosition) {
 		priority = _priority;
+		unit = _unit;
+		tilePosition = _tilePosition;
 	}
 
-	bool operator<(const CardScout &x) const
-	{
-		return priority < x.priority;
-	}
-
-	bool operator==(const CardScout &c) const
-	{
-		return priority == c.priority && position == c.position && onUse == c.onUse && unit == c.unit;
+	bool operator==(const CardScout &c) const {
+		return priority == c.priority &&
+			unit == c.unit &&
+			tilePosition == c.tilePosition &&
+			onUse == c.onUse;
 	}
 };
 
 //This class is used to store all the cards in a queue
 //The queue is ordered by card's priority (lowest on front)
-class OrderQueue{
+class OrderQueue 
+{
 public:
-	CardBuild * listBuild;
-	CardScout * listScout;
-	int scoutCardCount;
-	int buildCardCount;
+	CardBuild* buildCards; int buildCardsCount;
+	CardScout* scoutCards; int scoutCardsCount;
+
 	int highestPriority;
 
 	OrderQueue();
 	~OrderQueue();
 	static OrderQueue & Instance();
 
-	void getHighestPriority(CardBuild * card); //Return the highest priority card
-	Card * getSecondHighestPriority(CardType type); //Return the second highest priority card
+	Card* GetHighestPriority(Card* cardList, int cardCount);		//Return the highest priority card
+	Card* GetSecondHighestPriority(Card* cardList, int cardCount);	//Return the second highest priority card
 
+	CardBuild* gethighestprioritybuildtest();
 
-	void AddCard(CardScout card); //Add a card to the queue
-	void AddCard(CardBuild card); //Add a card to the queue
-	Card * GetBuildingCard(UnitType building);
-	void removeCard(Card * card); //Remove a card from the queue
+	//Card * GetBuildingCard(UnitType building);
+
+	void AddCard(Card card, Card* cardList, int cardCount);		//Add a card to the queue
+	void RemoveCard(Card* card, Card* cardList, int cardCount);	//Remove a card from the queue
 };

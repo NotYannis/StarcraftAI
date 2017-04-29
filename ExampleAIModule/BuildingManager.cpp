@@ -4,6 +4,7 @@
 BuildingManager::BuildingManager()
 {
 	ressourcesNeeded = 0;
+	orderQueue = &OrderQueue::Instance();
 }
 
 
@@ -18,7 +19,7 @@ BuildingManager & BuildingManager::Instance(){
 }
 
 void BuildingManager::GetNextCard(){
-	if (OrderQueue::Instance().buildCardCount > 0){
+	if (orderQueue->buildCardsCount > 0) {
 		/*Card * c = OrderQueue::Instance().getHighestPriority(build);
 		
 		if (!c->blocking && c->priority != -1 && Broodwar->self()->minerals() - ressourcesNeeded > c->target.mineralPrice()){
@@ -34,21 +35,36 @@ void BuildingManager::GetNextCard(){
 
 void BuildingManager::OnBuildingCreate(Unit u){
 	ressourcesNeeded -= u->getType().mineralPrice();
-	Card * c = OrderQueue::Instance().GetBuildingCard(u->getType());
+	//Card * c = OrderQueue::Instance().GetBuildingCard(u->getType());
+
+	Card * c = orderQueue->GetHighestPriority(orderQueue->buildCards, orderQueue->buildCardsCount);
 
 	if (c->priority != -1){
 		Unit u2 = WorkerManager::Instance().GetClosestWorkerBuilder(c->unit);
 		WorkerManager::Instance().SetWorkerCristal(c->unit);
-		Card * c2 = OrderQueue::Instance().getSecondHighestPriority(build);
-		c2->pos = Broodwar->getBuildLocation(UnitTypes::Protoss_Gateway, u->getTilePosition());
+		//Card * c2 = OrderQueue::Instance().getSecondHighestPriority(build);
+
+		Card * c2 = orderQueue->GetSecondHighestPriority(orderQueue->buildCards, orderQueue->buildCardsCount);
+		c2->tilePosition = Broodwar->getBuildLocation(UnitTypes::Protoss_Gateway, u->getTilePosition());
 	}
 }
 
 void BuildingManager::OnBuildingComplete(Unit u){
-	Card * c = OrderQueue::Instance().GetBuildingCard(u->getType());
+	//Card * c = OrderQueue::Instance().GetBuildingCard(u->getType());
+
+	Card * c = orderQueue->GetHighestPriority(orderQueue->buildCards, orderQueue->buildCardsCount);
+
 	if (c->priority != -1){
-		OrderQueue::Instance().removeCard(OrderQueue::Instance().GetBuildingCard(u->getType()));
-		Card * c2 = OrderQueue::Instance().getSecondHighestPriority(build);
-		c2->pos = Broodwar->getBuildLocation(UnitTypes::Protoss_Gateway, u->getTilePosition());
+		//OrderQueue::Instance().removeCard(OrderQueue::Instance().GetBuildingCard(u->getType()));
+
+		//orderQueue->RemoveCard(orderQueue->GetHighestPriority(orderQueue->buildCards, orderQueue->buildCardsCount)));
+
+		orderQueue->RemoveCard(c, orderQueue->buildCards, orderQueue->buildCardsCount);
+
+		//Card * c2 = OrderQueue::Instance().getSecondHighestPriority(build);
+
+		Card * c2 = orderQueue->GetSecondHighestPriority(orderQueue->buildCards, orderQueue->buildCardsCount);
+
+		c2->tilePosition = Broodwar->getBuildLocation(UnitTypes::Protoss_Gateway, u->getTilePosition());
 	}
 }

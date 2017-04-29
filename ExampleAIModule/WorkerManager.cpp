@@ -9,6 +9,7 @@ WorkerManager::WorkerManager()
 	workersBuilder = new Unit[10]; wBuildersCount = 0;
 	workersIdle = new Unit[50]; wIdleCount = 0;
 	workersScout = new Unit[10]; wScoutsCount = 0;
+	orderQueue = &OrderQueue::Instance();
 }
 
 
@@ -18,6 +19,7 @@ WorkerManager::~WorkerManager(){
 	delete[] workersBuilder;
 	delete[] workersIdle;
 	delete[] workersScout;
+	delete orderQueue;
 }
 
 WorkerManager & WorkerManager::Instance()
@@ -216,44 +218,44 @@ void WorkerManager::HandleWorkersGas(){
 	}
 }
 
-void WorkerManager::HandleWorkerScout(){
-	if (OrderQueue::Instance().scoutCardCount > 0) {
-		Card * c = OrderQueue::Instance().getHighestPriority(scout);
-		if (!c->blocking && c->priority != -1) {
+void WorkerManager::HandleWorkerScout() {
+	/*if (orderQueue->scoutCardsCount > 0) 
+	{
+		Card * c = orderQueue->GetHighestPriority(orderQueue->scoutCards, orderQueue->scoutCardsCount);
+		if (!c->onUse && c->priority != -1) 
+		{
 			if (wScoutsCount > 0)
 			{
-				Unit u = GetClosestWorkerScout(c->m_position);
-				c->unit = u;
-				SetWorkerToJob(u, c);
-				SetWorkerScout(u);
+				SetWorkerToJob(c->unit, c);
+				SetWorkerScout(c->unit);
 			}
 			else
 			{
-				if (workersCristal > 0) {
-					Unit u = GetClosestWorkerCristal(c->m_position);
-					c->unit = u;
-					SetWorkerToJob(u, c);
-					SetWorkerScout(u);
+				if (workersCristal > 0) 
+				{
+					SetWorkerToJob(c->unit, c);
+					SetWorkerScout(c->unit);
 				}
 			}
-			c->blocking = true;
+			c->onUse = true;
 		}
-		else{
-			if (c->unit->getPosition() != c->m_position) {
-				c->unit->move(c->m_position);
-				//Unit unitsetgdr = c->unit->getClosestUnit(IsEnemy);//getUnitsInRadius(/*c->unit->getType().sightRange(), IsEnemy*/20);
-				//Broodwar << unitsetgdr << std::endl;
-				/*if (!c->unit->getUnitsInRadius(c->unit->getType().sightRange(), IsEnemy).empty()) {
-					Common::Instance().enemyposition = c->unit->getPosition();
-					OrderQueue::Instance().removeCard(*c);
-				}*/
+		else 
+		{
+			if (c->unit->getPosition() != c->tilePosition)
+			{
+				if (c->unit->isIdle()) {
+					c->unit->move(c->tilePosition);
+					//get unit enemy aux alentours
+					// si unit alentours pas vide 
+					//si batiment alors enregistrer position enemy
+				}
 			}
 			else
 			{
-				OrderQueue::Instance().removeCard(c);
+				orderQueue->RemoveCard(c, orderQueue->scoutCards, orderQueue->scoutCardsCount);
 			}
 		}
-	}
+	}*/
 }
 
 
@@ -278,11 +280,14 @@ void WorkerManager::HandleWorkerScout(){
 //}
 
 
-void WorkerManager::HandleWorkersBuilder(){
-	for (int i = 0; i < wBuildersCount; ++i){
-		if (workersBuilder[i]->isIdle()){
-			Card * job = workersJob.at(workersBuilder[i]);
-			workersBuilder[i]->build(job->target, job->pos);
+void WorkerManager::HandleWorkersBuilder() {
+	for (int i = 0; i < wBuildersCount; ++i) {
+		if (workersBuilder[i]->isIdle()) {
+			//Card * job = workersJob.at(workersBuilder[i]);
+
+			CardBuild * c = orderQueue->gethighestprioritybuildtest();
+			workersBuilder[i]->build(c->target, c->tilePosition);
+			//workersBuilder[i]->build(job->target, job->pos);
 		}
 	}
 }
