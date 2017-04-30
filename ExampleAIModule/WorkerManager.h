@@ -18,17 +18,17 @@ public:
 	Unit * workersScout;	
 
 	int * wGasCount;
-	int * wCristalsCount;
-	int * wBuildersCount;
-	int * wIdlesCount;
-	int * wScoutsCount;
+	int * wCristalCount;
+	int * wBuilderCount;
+	int * wIdleCount;
+	int * wScoutCount;
 
 	WorkerManager();
 	~WorkerManager();
 
 	static WorkerManager & Instance();
 
-	Unit * GetClosestWorker(PositionOrUnit pos, Unit * workersList, int * workersCount); //Get the closest worker in the given array from the given position
+	Unit GetClosestWorker(PositionOrUnit pos, Unit * workersList, int * workersCount); //Get the closest worker in the given array from the given position
 	void RemoveWorker(Unit u, Unit * workersList, int * workersCount);					 //Remove the worker in the given array
 	void SetWorker(Unit u, Unit * workersList, int * workersCount);						 //Set a worker in the given array
 

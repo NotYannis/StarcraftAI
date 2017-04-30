@@ -32,15 +32,15 @@ void StrategyManager::Start() {
 	
 	for (auto & u : Broodwar->self()->getUnits()) {
 		if (u->getType().isWorker()) {
-			workerManager->SetWorker(u, workerManager->workersCristal, workerManager->wCristalsCount);
+			workerManager->SetWorker(u, workerManager->workersCristal, workerManager->wCristalCount);
 		}
 	}
 
 	Broodwar << "Number of Gas Workers : "		<< *workerManager->wGasCount << std::endl;
-	Broodwar << "Number of Cristal Workers : "	<< *workerManager->wCristalsCount << std::endl;
-	Broodwar << "Number of Builders Workers : "	<< *workerManager->wBuildersCount << std::endl;
-	Broodwar << "Number of Idle Workers : "		<< *workerManager->wIdlesCount << std::endl;
-	Broodwar << "Number of Scout Workers : "	<< *workerManager->wScoutsCount << std::endl;
+	Broodwar << "Number of Cristal Workers : "	<< *workerManager->wCristalCount << std::endl;
+	Broodwar << "Number of Builder Workers : "	<< *workerManager->wBuilderCount << std::endl;
+	Broodwar << "Number of Idle Workers : "		<< *workerManager->wIdleCount << std::endl;
+	Broodwar << "Number of Scout Workers : "	<< *workerManager->wScoutCount << std::endl;
 
 	int priority = 1;
 	for each (TilePosition tilePosition in Broodwar->getStartLocations())
@@ -48,7 +48,7 @@ void StrategyManager::Start() {
 		if (tilePosition != Broodwar->self()->getStartLocation()) {
 
 			ScoutCard scoutCard = ScoutCard(priority,
-				*workerManager->GetClosestWorker(cargo, workerManager->workersCristal, workerManager->wCristalsCount),
+				workerManager->GetClosestWorker(cargo, workerManager->workersCristal, workerManager->wCristalCount),
 				(Position)tilePosition);
 
 			orderQueue->AddCard(scoutCard, orderQueue->scoutCards, orderQueue->scoutCardsCount);
@@ -62,7 +62,7 @@ void StrategyManager::Start() {
 	Position pylonPos = (Position)Broodwar->getBuildLocation(UnitTypes::Protoss_Pylon, cargo->getTilePosition());
 	
 	BuildCard buildCard = BuildCard(20,
-		*workerManager->GetClosestWorker(pylonPos, workerManager->workersCristal, workerManager->wCristalsCount),
+		workerManager->GetClosestWorker(pylonPos, workerManager->workersCristal, workerManager->wCristalCount),
 		UnitTypes::Protoss_Pylon, Broodwar->getBuildLocation(UnitTypes::Protoss_Pylon, cargo->getTilePosition()));
 
 	orderQueue->AddCard(buildCard, orderQueue->buildCards, orderQueue->buildCardsCount);
@@ -72,7 +72,7 @@ void StrategyManager::Start() {
 }
 
 void StrategyManager::Update(){
-	//WorkerManager::Instance().HandleWorkerScout();
+	WorkerManager::Instance().HandleWorkerScout();
 	//WorkerManager::Instance().HandleWorkersBuilder();
 	WorkerManager::Instance().HandleWorkersCristal();
 	//BuildingManager::Instance().GetNextCard();
