@@ -7,9 +7,9 @@
 class WorkerManager
 {
 public:
-	//OrderQueue* orderQueue;
+	OrderQueue* orderQueue;
 
-	std::map <Unit, Card *> workersJob;
+	std::map <Unit, BaseCard *> workersJob;
 
 	Unit * workersGas;
 	Unit * workersCristal;
@@ -17,23 +17,20 @@ public:
 	Unit * workersIdle;
 	Unit * workersScout;	
 
-	int wGasCount;
-	int wCristalsCount;
-	int wBuildersCount;
-	int wIdleCount;
-	int wScoutsCount;
+	int * wGasCount;
+	int * wCristalsCount;
+	int * wBuildersCount;
+	int * wIdlesCount;
+	int * wScoutsCount;
 
-	Unit * GetClosestWorker(Unit* workersList, int workerCount, PositionOrUnit pos);
-	void RemoveWorker(Unit* workersList, int workerCount, Unit target);
-	void SetWorker(Unit* workersList, int workerCount, Unit u);
+	WorkerManager();
+	~WorkerManager();
 
-	Unit * GetClosestWorkerIdle(PositionOrUnit pos);
-	Unit GetClosestWorkerCristal(PositionOrUnit pos);
-	Unit GetClosestWorkerBuilder(PositionOrUnit pos);
-	Unit * GetClosestWorkerGas(PositionOrUnit pos);
-	Unit GetClosestWorkerScout(PositionOrUnit pos);
+	static WorkerManager & Instance();
 
-	void SetWorker(Unit u, Unit* workersType, int &workersTypeCount);
+	Unit * GetClosestWorker(PositionOrUnit pos, Unit * workersList, int * workersCount); //Get the closest worker in the given array from the given position
+	void RemoveWorker(Unit u, Unit * workersList, int * workersCount);					 //Remove the worker in the given array
+	void SetWorker(Unit u, Unit * workersList, int * workersCount);						 //Set a worker in the given array
 
 	void HandleWorkersCristal();
 	void HandleWorkersGas();
@@ -41,12 +38,19 @@ public:
 	void HandleWorkersBuilder();
 	void HandleWorkersIdle();
 
-	void SetWorkerToJob(Unit u, Card * c);
-	void removeCard(Unit u, Card * c);
+	void SetWorkerToJob(Unit u, BaseCard * c);
+	void removeCard(Unit u, BaseCard * c);
 
-	WorkerManager();
-	~WorkerManager();
+	/*Unit * GetClosestWorkerIdle(PositionOrUnit pos);
+	Unit GetClosestWorkerCristal(PositionOrUnit pos);
+	Unit GetClosestWorkerBuilder(PositionOrUnit pos);
+	Unit * GetClosestWorkerGas(PositionOrUnit pos);
+	Unit GetClosestWorkerScout(PositionOrUnit pos);
 
-	static WorkerManager & Instance();
+	void WorkerManager::SetWorkerCristal(Unit u)
+	void WorkerManager::SetWorkerBuilder(Unit u)
+	void WorkerManager::SetWorkerGas(Unit u)
+	void WorkerManager::SetWorkerScout(Unit u)*/
+
 };
 

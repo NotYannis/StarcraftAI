@@ -3,71 +3,74 @@
 #include "Common.h"
 
 //Base structure used to give any kind of order to a unit
-struct Card 
+struct BaseCard 
 {
 	int priority = -1;	//Priority of the card
 	Unit unit;			//The unit affected to the task
-	TilePosition tilePosition;	//Position where we want to build or scout
 	bool onUse = false;	//Has it be affected or not ?
 
-	Card(){}
+	BaseCard(){}
 
-	Card(int _priority, Unit _unit, TilePosition _tilePosition) {
+	BaseCard(int _priority, Unit _unit) {
 		priority = _priority;
 		unit = _unit;
-		tilePosition = _tilePosition;
 	}
 
-	bool operator<(const Card &c) const {
+	bool operator<(const BaseCard &c) const {
 		return priority < c.priority;
 	}
 
-	bool operator==(const Card &c) const {
+	bool operator==(const BaseCard &c) const {
 		return priority == c.priority &&
 			unit == c.unit &&
-			tilePosition == c.tilePosition &&
 			onUse == c.onUse;
 	}
 };
 
 //Structure used to give a building order to a unit
-struct CardBuild : Card 
+struct BuildCard : BaseCard
 {
 	UnitType target;			//Unit to build
+	TilePosition tilePosition;	//TilePosition where we want to build
 
-	CardBuild(){}
+	BuildCard(){}
 
 	///<summary>Structure used to give a building order to a unit</summary>
-	CardBuild(int _priority, Unit _unit, Position _position, UnitType _target) {
+	BuildCard(int _priority, Unit _unit, UnitType _target, TilePosition _tilePosition) {
+		priority = _priority;
+		unit = _unit;
 		target = _target;
+		tilePosition = _tilePosition;
 	}
 
-	bool operator==(const CardBuild &c) const {
+	bool operator==(const BuildCard &c) const {
 		return priority == c.priority &&
 			unit == c.unit &&
-			tilePosition == c.tilePosition &&
 			onUse == c.onUse &&
-			target == c.target;
+			target == c.target &&
+			tilePosition == c.tilePosition;
 	}
 };
 
 //Structure used to give a scouting order to a unit
-struct CardScout : Card 
+struct ScoutCard : BaseCard
 {
-	CardScout(){}
+	Position target; //Position where we want to scout
+
+	ScoutCard(){}
 
 	///<summary>Structure used to give a scouting order to a unit</summary>
-	CardScout(int _priority, Unit _unit, TilePosition _tilePosition) {
+	ScoutCard(int _priority, Unit _unit, Position _target) {
 		priority = _priority;
 		unit = _unit;
-		tilePosition = _tilePosition;
+		target = _target;
 	}
 
-	bool operator==(const CardScout &c) const {
+	bool operator==(const ScoutCard &c) const {
 		return priority == c.priority &&
 			unit == c.unit &&
-			tilePosition == c.tilePosition &&
-			onUse == c.onUse;
+			onUse == c.onUse &&
+			target == c.target;
 	}
 };
 
@@ -76,22 +79,23 @@ struct CardScout : Card
 class OrderQueue 
 {
 public:
-	CardBuild* buildCards; int buildCardsCount;
-	CardScout* scoutCards; int scoutCardsCount;
+	BuildCard * buildCards; int * buildCardsCount;
+	ScoutCard * scoutCards; int * scoutCardsCount;
 
 	int highestPriority;
 
 	OrderQueue();
 	~OrderQueue();
+
 	static OrderQueue & Instance();
+		
+	ScoutCard * GetHighestPriorityScoutCard();	//Return the highest priority scout card
+	BuildCard * GetHighestPriorityBuildCard();	//Return the highest priority building card
 
-	Card* GetHighestPriority(Card* cardList, int * cardCount);		//Return the highest priority card
-	Card* GetSecondHighestPriority(Card* cardList, int * cardCount);	//Return the second highest priority card
+	BuildCard * GetSecondHighestPriorityBuildCard();	//Return the second highest priority card
 
-	CardBuild* gethighestprioritybuildtest();
+	void AddCard(BaseCard card, BaseCard* cardList, int * cardCount);		//Add a card to the queue
+	void RemoveCard(BaseCard* card, BaseCard* cardList, int * cardCount);	//Remove a card from the queue
 
 	//Card * GetBuildingCard(UnitType building);
-
-	void AddCard(Card card, Card* cardList, int * cardCount);		//Add a card to the queue
-	void RemoveCard(Card* card, Card* cardList, int * cardCount);	//Remove a card from the queue
 };

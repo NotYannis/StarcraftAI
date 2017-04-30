@@ -9,12 +9,12 @@ class StrategyManager
 {
 public:
 	Unit cargo;
-	Card * workingCards;
+	BaseCard * workingCards;
 
-	//OrderQueue* orderQueue;
-	//WorkerManager* workerManager;
+	OrderQueue * orderQueue;
+	WorkerManager * workerManager;
 
-	int workingCardsCount;
+	int * workingCardsCount;
 
 	StrategyManager();
 	~StrategyManager();
@@ -23,5 +23,5 @@ public:
 
 	void Start();
 	void Update();
-	void CardDone(Card * c);
+	void CardDone(BaseCard * c);
 };

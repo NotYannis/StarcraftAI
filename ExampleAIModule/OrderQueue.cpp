@@ -1,13 +1,14 @@
 #include "OrderQueue.h"
 
 OrderQueue::OrderQueue() {
-	buildCards = new CardBuild[100]; buildCardsCount = 0;
-	scoutCards = new CardScout[100]; scoutCardsCount = 0;
+	buildCards = new BuildCard[100]; buildCardsCount = new int(0);
+	scoutCards = new ScoutCard[100]; scoutCardsCount = new int(0);
 	highestPriority = 0;
 }
+
 OrderQueue::~OrderQueue() {
-	delete[] buildCards;
-	delete[] scoutCards;
+	delete[] buildCards; delete buildCardsCount;
+	delete[] scoutCards; delete scoutCardsCount;
 }
 
 OrderQueue & OrderQueue::Instance() {
@@ -15,73 +16,57 @@ OrderQueue & OrderQueue::Instance() {
 	return orderQueue;
 }
 
-/*
-OLD
-//Return the card with the highest priority
-Card * OrderQueue::getHighestPriority(CardType type){
-	Card * high = &Card();
-	for (int i = 0; i < cardCount; ++i){
-		if (high->priority < list[i].priority && list[i].type == type){
-			high = &list[i];
-		}
-	}
+//Return the highest priority scout card
+ScoutCard * OrderQueue::GetHighestPriorityScoutCard() {
+	ScoutCard * high = &ScoutCard();
 
-	highestPriority = high->priority;
-
-	return high;
-}*/
-
-//NEW
-//Return the card with the highest priority
-Card * OrderQueue::GetHighestPriority(Card* cardList, int * cardCount) {
-	Card * high = &Card();
-
-	for (int i = 0; i < *cardCount - 1; ++i) {
-		if (high < &cardList[i]) {
-			high = &cardList[i];
+	for (int i = 0; i < *scoutCardsCount - 1; ++i) {
+		if (high < &scoutCards[i]) {
+			high = &scoutCards[i];
 		}
 	}
 	return high;
 }
 
-//Return the card with the highest priority
-Card * OrderQueue::GetSecondHighestPriority(Card* cardList, int * cardCount) {
-	Card * high = &Card();
+//Return the highest priority building card
+BuildCard * OrderQueue::GetHighestPriorityBuildCard() {
+	BuildCard * high = &BuildCard();
 
-	for (int i = 0; i < *cardCount - 1; ++i) {
-		if (high->priority < highestPriority && high->priority < cardList[i].priority) {
-			high = &cardList[i];
+	for (int i = 0; i < *buildCardsCount - 1; ++i) {
+		if (high < &buildCards[i]) {
+			high = &buildCards[i];
 		}
 	}
+	return high;
+}
 
+//Return the second highest priority card
+BuildCard * OrderQueue::GetSecondHighestPriorityBuildCard() {
+	BuildCard * high = &BuildCard();
+
+	for (int i = 0; i < *buildCardsCount - 1; ++i) {
+		if (high->priority < highestPriority && high->priority < buildCards[i].priority) {
+			high = &buildCards[i];
+		}
+	}
 	return high;
 }
 
 //Add a card to the queue
-void OrderQueue::AddCard(Card card, Card* cardList, int * cardCount) {
+void OrderQueue::AddCard(BaseCard card, BaseCard * cardList, int * cardCount) {
 	cardList[*cardCount - 1] = card;
-	*cardCount += 1;
+	++*cardCount;
 }
 
-/*Card * OrderQueue::GetBuildingCard(UnitType building){
-	Card * c = &(Card());
-	for (int i = 0; i < scoutCardCount + buildCardCount - 1; ++i){
-		if (list[i].target == building){
-			return &list[i];
-		}
-	}
-	return c;
-}*/
-
 //Remove a card from the queue
-void OrderQueue::RemoveCard(Card* card, Card * cardList, int * cardCount) {
+void OrderQueue::RemoveCard(BaseCard * card, BaseCard * cardList, int * cardCount) {
 	bool found = false;
 
 	for (int i = 0; i < *cardCount - 1; ++i) {
 		if (!found) {
 			if (card == &cardList[i]) {
 				found = true;
-				cardList[i] = Card();
+				cardList[i] = BaseCard();
 			}
 		}
 		if(found) {
@@ -92,14 +77,12 @@ void OrderQueue::RemoveCard(Card* card, Card * cardList, int * cardCount) {
 	*cardCount -= 1;
 }
 
-CardBuild* OrderQueue::gethighestprioritybuildtest()
-{
-	CardBuild * high = &CardBuild();
-
-	for (int i = 0; i < buildCardsCount - 1; ++i) {
-		if (high < &buildCards[i]) {
-			high = &buildCards[i];
-		}
-	}
-	return high;
+/*Card * OrderQueue::GetBuildingCard(UnitType building){
+Card * c = &(Card());
+for (int i = 0; i < scoutCardCount + buildCardCount - 1; ++i){
+if (list[i].target == building){
+return &list[i];
 }
+}
+return c;
+}*/
