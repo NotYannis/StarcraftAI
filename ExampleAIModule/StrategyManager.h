@@ -11,6 +11,9 @@ public:
 	Unit cargo;
 	Card * workingCards;
 
+	OrderQueue* orderQueue;
+	WorkerManager* workerManager;
+
 	int workingCardsCount;
 
 	StrategyManager();
@@ -20,5 +23,5 @@ public:
 
 	void Start();
 	void Update();
-	void cardDone(Card * c);
+	void CardDone(Card * c);
 };

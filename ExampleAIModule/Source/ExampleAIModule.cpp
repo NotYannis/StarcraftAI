@@ -33,7 +33,7 @@ void ExampleAIModule::onStart()
 {
 	Scouting scouting = Scouting();
 	// Hello World!
-	Broodwar->sendText("gl & hf! Nan jdèc GET REKT !!");
+	Broodwar->sendText("TEST");
 	// Print the map name.
 	// BWAPI returns std::string when retrieving a string, don't forget to add .c_str() when printing!
 	Broodwar << "The map is " << Broodwar->mapName() << "!" << std::endl;

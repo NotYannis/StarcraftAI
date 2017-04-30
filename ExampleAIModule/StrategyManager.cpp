@@ -3,7 +3,10 @@
 StrategyManager::StrategyManager()
 {
 	workingCards = new Card[100]; workingCardsCount = 0;
-	for (auto &u : Broodwar->self()->getUnits()){
+	orderQueue = &OrderQueue::Instance();
+	workerManager = &WorkerManager::Instance();
+
+	for (auto &u : Broodwar->self()->getUnits()) {
 		if (u->getType().isResourceDepot()){
 			cargo = u;
 		}
@@ -14,16 +17,18 @@ StrategyManager::StrategyManager()
 StrategyManager::~StrategyManager()
 {
 	delete[] workingCards;
+	delete orderQueue;
+	delete workerManager;
 }
 
-StrategyManager & StrategyManager::Instance(){
+StrategyManager & StrategyManager::Instance() {
 	static StrategyManager instance;
 	return instance;
 }
 
 
 
-void StrategyManager::Start(){
+void StrategyManager::Start() {
 	for (auto & u : Broodwar->self()->getUnits()){
 		if (u->getType().isWorker()){
 			WorkerManager::Instance().SetWorkerCristal(u);
@@ -43,21 +48,33 @@ void StrategyManager::Start(){
 	WorkerManager::Instance().SetWorkerToJob(u, highestPrio);
 	WorkerManager::Instance().SetWorkerScout(u);*/
 
+	int priority = 1;
 	for each (TilePosition tilePosition in Broodwar->getStartLocations())
 	{
 		if (tilePosition != Broodwar->self()->getStartLocation()) {
-			Card scoutCard = Card((Position)tilePosition, 10, false);
-			OrderQueue::Instance().addCard(scoutCard);
+			CardScout scoutCard = CardScout(priority, workerManager->GetClosestWorkerCristal((Position)tilePosition),
+				tilePosition);
+			orderQueue->AddCard(scoutCard, orderQueue->scoutCards, orderQueue->scoutCardsCount);
+			++priority;
 		}
 	}
 
-	Card c = Card(UnitTypes::Protoss_Pylon, 20, Broodwar->getBuildLocation(UnitTypes::Protoss_Pylon, cargo->getTilePosition()), false);
+	CardBuild buildCard = CardBuild(20,
+		workerManager->GetClosestWorkerCristal((Position)Broodwar->getBuildLocation(UnitTypes::Protoss_Pylon, cargo->getTilePosition())),
+		(Position)Broodwar->getBuildLocation(UnitTypes::Protoss_Pylon, cargo->getTilePosition()), UnitTypes::Protoss_Pylon);
+
+	orderQueue->AddCard(buildCard, orderQueue->buildCards, orderQueue->buildCardsCount);
+
+	Broodwar << "Nb de cartes build : " << orderQueue->buildCardsCount << std::endl;
+	Broodwar << "Nb de cartes scout : " << orderQueue->scoutCardsCount << std::endl;
+
+	/*Card c = Card(UnitTypes::Protoss_Pylon, 20, Broodwar->getBuildLocation(UnitTypes::Protoss_Pylon, cargo->getTilePosition()), false);
 	Card d = Card(UnitTypes::Protoss_Gateway, 19, Broodwar->getBuildLocation(UnitTypes::Protoss_Gateway, TilePosition(0, 0)), false);
 	Card e = Card(UnitTypes::Protoss_Pylon, 18, Broodwar->getBuildLocation(UnitTypes::Protoss_Pylon, cargo->getTilePosition()), false);
 
 	OrderQueue::Instance().addCard(c);
 	OrderQueue::Instance().addCard(d);
-	OrderQueue::Instance().addCard(e);
+	OrderQueue::Instance().addCard(e);*/
 }
 
 void StrategyManager::Update(){
@@ -67,15 +84,16 @@ void StrategyManager::Update(){
 	//BuildingManager::Instance().GetNextCard();
 }
 
-void StrategyManager::cardDone(Card * c){
+void StrategyManager::CardDone(Card * card) {
 	bool found = false;
-	for (int i = 0; i < workingCardsCount; ++i){
-		if (!found){
-			if (workingCards[i] == *c){
+
+	for (int i = 0; i < workingCardsCount; ++i) {
+		if (!found) {
+			if (workingCards[i] == *card) {
 				found = true;
 			}
 		}
-		else if (i < workingCardsCount - 1){
+		else if (i < workingCardsCount - 1) {
 			workingCards[i] = workingCards[i + 1];
 		}
 	}

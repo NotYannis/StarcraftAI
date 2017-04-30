@@ -6,6 +6,8 @@
 class WorkerManager
 {
 public:
+	OrderQueue* orderQueue;
+
 	std::map <Unit, Card *> workersJob;
 
 	Unit * workersGas;
