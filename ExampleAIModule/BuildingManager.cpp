@@ -4,7 +4,7 @@
 BuildingManager::BuildingManager()
 {
 	ressourcesNeeded = 0;
-	//orderQueue = &OrderQueue::Instance();
+	orderQueue = &OrderQueue::Instance();
 }
 
 
@@ -19,7 +19,7 @@ BuildingManager & BuildingManager::Instance(){
 }
 
 void BuildingManager::GetNextCard(){
-	if (OrderQueue::Instance().buildCardsCount > 0) {
+	if (orderQueue->buildCardsCount > 0) {
 		/*Card * c = OrderQueue::Instance().getHighestPriority(build);
 		
 		if (!c->blocking && c->priority != -1 && Broodwar->self()->minerals() - ressourcesNeeded > c->target.mineralPrice()){
@@ -37,14 +37,14 @@ void BuildingManager::OnBuildingCreate(Unit u){
 	ressourcesNeeded -= u->getType().mineralPrice();
 	//Card * c = OrderQueue::Instance().GetBuildingCard(u->getType());
 
-	Card * c = OrderQueue::Instance().GetHighestPriority(OrderQueue::Instance().buildCards, OrderQueue::Instance().buildCardsCount);
+	Card * c = orderQueue->GetHighestPriority(orderQueue->buildCards, &orderQueue->buildCardsCount);
 
 	if (c->priority != -1){
 		Unit u2 = WorkerManager::Instance().GetClosestWorkerBuilder(c->unit);
-		WorkerManager::Instance().SetWorker(c->unit, WorkerManager::Instance().workersCristal, WorkerManager::Instance().wCristalsCount);
+		WorkerManager::Instance().SetWorkerCristal(c->unit);
 		//Card * c2 = OrderQueue::Instance().getSecondHighestPriority(build);
 
-		Card * c2 = OrderQueue::Instance().GetSecondHighestPriority(OrderQueue::Instance().buildCards, OrderQueue::Instance().buildCardsCount);
+		Card * c2 = orderQueue->GetSecondHighestPriority(orderQueue->buildCards, &orderQueue->buildCardsCount);
 		c2->tilePosition = Broodwar->getBuildLocation(UnitTypes::Protoss_Gateway, u->getTilePosition());
 	}
 }
@@ -52,18 +52,18 @@ void BuildingManager::OnBuildingCreate(Unit u){
 void BuildingManager::OnBuildingComplete(Unit u){
 	//Card * c = OrderQueue::Instance().GetBuildingCard(u->getType());
 
-	Card * c = OrderQueue::Instance().GetHighestPriority(OrderQueue::Instance().buildCards, OrderQueue::Instance().buildCardsCount);
+	Card * c = orderQueue->GetHighestPriority(orderQueue->buildCards, &orderQueue->buildCardsCount);
 
 	if (c->priority != -1){
 		//OrderQueue::Instance().removeCard(OrderQueue::Instance().GetBuildingCard(u->getType()));
 
 		//orderQueue->RemoveCard(orderQueue->GetHighestPriority(orderQueue->buildCards, orderQueue->buildCardsCount)));
 
-		OrderQueue::Instance().RemoveCard(c, OrderQueue::Instance().buildCards, OrderQueue::Instance().buildCardsCount);
+		orderQueue->RemoveCard(c, orderQueue->buildCards, &orderQueue->buildCardsCount);
 
 		//Card * c2 = OrderQueue::Instance().getSecondHighestPriority(build);
 
-		Card * c2 = OrderQueue::Instance().GetSecondHighestPriority(OrderQueue::Instance().buildCards, OrderQueue::Instance().buildCardsCount);
+		Card * c2 = orderQueue->GetSecondHighestPriority(orderQueue->buildCards, &orderQueue->buildCardsCount);
 
 		c2->tilePosition = Broodwar->getBuildLocation(UnitTypes::Protoss_Gateway, u->getTilePosition());
 	}

@@ -33,10 +33,10 @@ Card * OrderQueue::getHighestPriority(CardType type){
 
 //NEW
 //Return the card with the highest priority
-Card * OrderQueue::GetHighestPriority(Card* cardList, int cardCount) {
+Card * OrderQueue::GetHighestPriority(Card* cardList, int * cardCount) {
 	Card * high = &Card();
 
-	for (int i = 0; i < cardCount - 1; ++i) {
+	for (int i = 0; i < *cardCount - 1; ++i) {
 		if (high < &cardList[i]) {
 			high = &cardList[i];
 		}
@@ -45,10 +45,10 @@ Card * OrderQueue::GetHighestPriority(Card* cardList, int cardCount) {
 }
 
 //Return the card with the highest priority
-Card * OrderQueue::GetSecondHighestPriority(Card* cardList, int cardCount) {
+Card * OrderQueue::GetSecondHighestPriority(Card* cardList, int * cardCount) {
 	Card * high = &Card();
 
-	for (int i = 0; i < cardCount - 1; ++i) {
+	for (int i = 0; i < *cardCount - 1; ++i) {
 		if (high->priority < highestPriority && high->priority < cardList[i].priority) {
 			high = &cardList[i];
 		}
@@ -58,9 +58,9 @@ Card * OrderQueue::GetSecondHighestPriority(Card* cardList, int cardCount) {
 }
 
 //Add a card to the queue
-void OrderQueue::AddCard(Card card, Card* cardList, int cardCount) {
-	cardList[cardCount - 1] = card;
-	++cardCount;
+void OrderQueue::AddCard(Card card, Card* cardList, int * cardCount) {
+	cardList[*cardCount - 1] = card;
+	*cardCount += 1;
 }
 
 /*Card * OrderQueue::GetBuildingCard(UnitType building){
@@ -74,10 +74,10 @@ void OrderQueue::AddCard(Card card, Card* cardList, int cardCount) {
 }*/
 
 //Remove a card from the queue
-void OrderQueue::RemoveCard(Card* card, Card	* cardList, int cardCount) {
+void OrderQueue::RemoveCard(Card* card, Card * cardList, int * cardCount) {
 	bool found = false;
 
-	for (int i = 0; i < cardCount - 1; ++i) {
+	for (int i = 0; i < *cardCount - 1; ++i) {
 		if (!found) {
 			if (card == &cardList[i]) {
 				found = true;
@@ -89,7 +89,7 @@ void OrderQueue::RemoveCard(Card* card, Card	* cardList, int cardCount) {
 		}
 	}
 
-	--cardCount;
+	*cardCount -= 1;
 }
 
 CardBuild* OrderQueue::gethighestprioritybuildtest()
