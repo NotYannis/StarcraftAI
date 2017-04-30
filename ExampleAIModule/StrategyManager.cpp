@@ -52,18 +52,20 @@ void StrategyManager::Start() {
 	for each (TilePosition tilePosition in Broodwar->getStartLocations())
 	{
 		if (tilePosition != Broodwar->self()->getStartLocation()) {
-			CardScout scoutCard = CardScout(priority, workerManager->GetClosestWorkerCristal((Position)tilePosition),
-				tilePosition);
-			orderQueue->AddCard(scoutCard, orderQueue->scoutCards, orderQueue->scoutCardsCount);
+			CardScout scoutCard = CardScout(priority, *(workerManager->GetClosestWorker(workerManager->workersCristal, workerManager->wCristalsCount, cargo)), tilePosition);
+			orderQueue->AddCard(scoutCard, orderQueue->scoutCards, &orderQueue->scoutCardsCount);
 			++priority;
 		}
 	}
 
+
+	Position pylonPos = (Position)Broodwar->getBuildLocation(UnitTypes::Protoss_Pylon, cargo->getTilePosition());
+	
 	CardBuild buildCard = CardBuild(20,
-		workerManager->GetClosestWorkerCristal((Position)Broodwar->getBuildLocation(UnitTypes::Protoss_Pylon, cargo->getTilePosition())),
+		*(workerManager->GetClosestWorker(workerManager->workersCristal, workerManager->wCristalsCount, pylonPos)),
 		(Position)Broodwar->getBuildLocation(UnitTypes::Protoss_Pylon, cargo->getTilePosition()), UnitTypes::Protoss_Pylon);
 
-	orderQueue->AddCard(buildCard, orderQueue->buildCards, orderQueue->buildCardsCount);
+	orderQueue->AddCard(buildCard, orderQueue->buildCards, &orderQueue->buildCardsCount);
 
 	Broodwar << "Nb de cartes build : " << orderQueue->buildCardsCount << std::endl;
 	Broodwar << "Nb de cartes scout : " << orderQueue->scoutCardsCount << std::endl;

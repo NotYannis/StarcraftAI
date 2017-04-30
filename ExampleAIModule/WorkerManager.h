@@ -22,6 +22,10 @@ public:
 	int wIdleCount;
 	int wScoutsCount;
 
+	Unit * GetClosestWorker(Unit* workersList, int workerCount, PositionOrUnit pos);
+	void RemoveWorker(Unit* workersList, int workerCount, Unit target);
+	void SetWorker(Unit* workersList, int workerCount, Unit u);
+
 	Unit * GetClosestWorkerIdle(PositionOrUnit pos);
 	Unit GetClosestWorkerCristal(PositionOrUnit pos);
 	Unit GetClosestWorkerBuilder(PositionOrUnit pos);

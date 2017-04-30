@@ -37,14 +37,14 @@ void BuildingManager::OnBuildingCreate(Unit u){
 	ressourcesNeeded -= u->getType().mineralPrice();
 	//Card * c = OrderQueue::Instance().GetBuildingCard(u->getType());
 
-	Card * c = orderQueue->GetHighestPriority(orderQueue->buildCards, orderQueue->buildCardsCount);
+	Card * c = orderQueue->GetHighestPriority(orderQueue->buildCards, &orderQueue->buildCardsCount);
 
 	if (c->priority != -1){
 		Unit u2 = WorkerManager::Instance().GetClosestWorkerBuilder(c->unit);
 		WorkerManager::Instance().SetWorkerCristal(c->unit);
 		//Card * c2 = OrderQueue::Instance().getSecondHighestPriority(build);
 
-		Card * c2 = orderQueue->GetSecondHighestPriority(orderQueue->buildCards, orderQueue->buildCardsCount);
+		Card * c2 = orderQueue->GetSecondHighestPriority(orderQueue->buildCards, &orderQueue->buildCardsCount);
 		c2->tilePosition = Broodwar->getBuildLocation(UnitTypes::Protoss_Gateway, u->getTilePosition());
 	}
 }
@@ -52,18 +52,18 @@ void BuildingManager::OnBuildingCreate(Unit u){
 void BuildingManager::OnBuildingComplete(Unit u){
 	//Card * c = OrderQueue::Instance().GetBuildingCard(u->getType());
 
-	Card * c = orderQueue->GetHighestPriority(orderQueue->buildCards, orderQueue->buildCardsCount);
+	Card * c = orderQueue->GetHighestPriority(orderQueue->buildCards, &orderQueue->buildCardsCount);
 
 	if (c->priority != -1){
 		//OrderQueue::Instance().removeCard(OrderQueue::Instance().GetBuildingCard(u->getType()));
 
 		//orderQueue->RemoveCard(orderQueue->GetHighestPriority(orderQueue->buildCards, orderQueue->buildCardsCount)));
 
-		orderQueue->RemoveCard(c, orderQueue->buildCards, orderQueue->buildCardsCount);
+		orderQueue->RemoveCard(c, orderQueue->buildCards, &orderQueue->buildCardsCount);
 
 		//Card * c2 = OrderQueue::Instance().getSecondHighestPriority(build);
 
-		Card * c2 = orderQueue->GetSecondHighestPriority(orderQueue->buildCards, orderQueue->buildCardsCount);
+		Card * c2 = orderQueue->GetSecondHighestPriority(orderQueue->buildCards, &orderQueue->buildCardsCount);
 
 		c2->tilePosition = Broodwar->getBuildLocation(UnitTypes::Protoss_Gateway, u->getTilePosition());
 	}

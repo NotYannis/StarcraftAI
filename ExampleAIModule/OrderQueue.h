@@ -71,7 +71,7 @@ struct CardScout : Card
 	}
 };
 
-//This class is used to store all the cards in a queue
+//This class is used to store all the cards lists, 
 //The queue is ordered by card's priority (lowest on front)
 class OrderQueue 
 {
@@ -85,13 +85,13 @@ public:
 	~OrderQueue();
 	static OrderQueue & Instance();
 
-	Card* GetHighestPriority(Card* cardList, int cardCount);		//Return the highest priority card
-	Card* GetSecondHighestPriority(Card* cardList, int cardCount);	//Return the second highest priority card
+	Card* GetHighestPriority(Card* cardList, int * cardCount);		//Return the highest priority card
+	Card* GetSecondHighestPriority(Card* cardList, int * cardCount);	//Return the second highest priority card
 
 	CardBuild* gethighestprioritybuildtest();
 
 	//Card * GetBuildingCard(UnitType building);
 
-	void AddCard(Card card, Card* cardList, int cardCount);		//Add a card to the queue
-	void RemoveCard(Card* card, Card* cardList, int cardCount);	//Remove a card from the queue
+	void AddCard(Card card, Card* cardList, int * cardCount);		//Add a card to the queue
+	void RemoveCard(Card* card, Card* cardList, int * cardCount);	//Remove a card from the queue
 };

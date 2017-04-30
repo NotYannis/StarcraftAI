@@ -28,6 +28,46 @@ WorkerManager & WorkerManager::Instance()
 	return instance;
 }
 
+///<summary>Get the closest worker in the given array from the given position</summary>
+Unit * WorkerManager::GetClosestWorker(Unit* workersList, int workerCount, PositionOrUnit pos){
+	double distance = 20000;
+	Unit * u;
+	int index = 0;
+
+	//Search for the nearest worker 
+	for (int i = 0; i < workerCount; ++i){
+		if (workersList[i]->getDistance(pos) < distance){
+			distance = workersList[i]->getDistance(pos);
+			u = &workersList[i];
+			index = i;
+		}
+	}
+
+	return u;
+}
+
+///<summary>Remove the worker in the given array</summary>
+void WorkerManager::RemoveWorker(Unit* workersList, int workerCount, Unit target){
+	int found = false;
+
+	//Search for the nearest worker 
+	for (int i = 0; i < workerCount; ++i){
+		if (workersList[i] == target){
+			found = true;
+		}
+		if (found){
+			workersList[i] = workersList[i + 1];
+		}
+	}
+
+	--workerCount;
+}
+
+///<summary>Set a worker in the given array</summary>
+void WorkerManager::SetWorker(Unit* workersList, int workerCount, Unit u){
+	workersList[workerCount] = u;
+	++workerCount;
+}
 
 Unit * WorkerManager::GetClosestWorkerIdle(PositionOrUnit pos){
 	double distance = 20000;
