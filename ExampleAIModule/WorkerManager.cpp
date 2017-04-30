@@ -9,7 +9,7 @@ WorkerManager::WorkerManager()
 	workersBuilder = new Unit[10]; wBuildersCount = 0;
 	workersIdle = new Unit[50]; wIdleCount = 0;
 	workersScout = new Unit[10]; wScoutsCount = 0;
-	orderQueue = &OrderQueue::Instance();
+	//orderQueue = &OrderQueue::Instance();
 }
 
 
@@ -19,7 +19,7 @@ WorkerManager::~WorkerManager(){
 	delete[] workersBuilder;
 	delete[] workersIdle;
 	delete[] workersScout;
-	delete orderQueue;
+	//delete orderQueue;
 }
 
 WorkerManager & WorkerManager::Instance()
@@ -68,7 +68,7 @@ Unit WorkerManager::GetClosestWorkerCristal(PositionOrUnit pos){
 			index = i;
 		}
 	}
-
+	
 	//Reorganize the array
 	for (int i = index; i < wCristalsCount; ++i){
 		workersCristal[i] = Unit();
@@ -154,12 +154,15 @@ Unit WorkerManager::GetClosestWorkerScout(PositionOrUnit pos){
 	return u;
 }
 
-void WorkerManager::SetWorkerIdle(Unit u){
-	workersIdle[wIdleCount] = u;
-	++wIdleCount;
+void WorkerManager::SetWorker(Unit u, Unit* workersType, int &workersTypeCount) {
+	//Broodwar << "first step workersTypeCount : " << workersTypeCount << std::endl;
+	//workersType[workersTypeCount] = u;
+	++workersTypeCount;
+	Broodwar << "second step workersTypeCount : " << workersTypeCount << std::endl;
+	Broodwar << "second step wCristalsCount : " << wCristalsCount << std::endl;
 }
 
-void WorkerManager::SetWorkerCristal(Unit u){
+/*void WorkerManager::SetWorkerCristal(Unit u){
 	workersCristal[wCristalsCount] = u;
 	++wCristalsCount;
 }
@@ -177,7 +180,7 @@ void WorkerManager::SetWorkerGas(Unit u){
 void WorkerManager::SetWorkerScout(Unit u){
 	workersScout[wScoutsCount] = u;
 	++wScoutsCount;
-}
+}*/
 
 void WorkerManager::HandleWorkersIdle(){
 	for (auto &u : Broodwar->self()->getUnits()){
@@ -194,7 +197,8 @@ void WorkerManager::HandleWorkersIdle(){
 }
 
 void WorkerManager::HandleWorkersCristal(){
-	for (int i = 0; i < wCristalsCount; ++i){
+	//Broodwar << "wCristalsCount : " << wCristalsCount << std::endl;
+	/*for (int i = 0; i < wCristalsCount; ++i){
 		if (workersCristal[i]->isIdle()) {
 			if (workersCristal[i]->isCarryingMinerals()){
 				workersCristal[i]->returnCargo();
@@ -204,7 +208,7 @@ void WorkerManager::HandleWorkersCristal(){
 				workersCristal[i]->gather(workersCristal[i]->getClosestUnit(IsMineralField));
 			}
 		}
-	}
+	}*/
 }
 
 void WorkerManager::HandleWorkersGas(){
@@ -285,7 +289,7 @@ void WorkerManager::HandleWorkersBuilder() {
 		if (workersBuilder[i]->isIdle()) {
 			//Card * job = workersJob.at(workersBuilder[i]);
 
-			CardBuild * c = orderQueue->gethighestprioritybuildtest();
+			CardBuild * c = OrderQueue::Instance().gethighestprioritybuildtest();
 			workersBuilder[i]->build(c->target, c->tilePosition);
 			//workersBuilder[i]->build(job->target, job->pos);
 		}

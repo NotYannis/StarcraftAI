@@ -11,8 +11,8 @@ public:
 	Unit cargo;
 	Card * workingCards;
 
-	OrderQueue* orderQueue;
-	WorkerManager* workerManager;
+	//OrderQueue* orderQueue;
+	//WorkerManager* workerManager;
 
 	int workingCardsCount;
 

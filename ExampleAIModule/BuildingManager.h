@@ -7,7 +7,7 @@
 class BuildingManager
 {
 public:
-	OrderQueue* orderQueue;
+	//OrderQueue* orderQueue;
 	int ressourcesNeeded;
 
 	BuildingManager();

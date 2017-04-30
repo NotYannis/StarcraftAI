@@ -9,11 +9,11 @@ using namespace BWAPI;
 using namespace Filter;
 
 bool firstDepot = false;
-bool stopProduction = false;
-int workersOnGas = 0;
-WarManager *war;
+//bool stopProduction = false;
+//int workersOnGas = 0;
+//WarManager *war;
 
-class Scouting{
+/*class Scouting{
 	public :
 		Unit scout = nullptr;
 		Position goTo;
@@ -25,13 +25,13 @@ class Scouting{
 		void SetScout(Unit _scout){
 			this->scout = _scout;
 		}
-};
+};*/
 
-Scouting scouting;
+//Scouting scouting;
 
 void ExampleAIModule::onStart()
 {
-	Scouting scouting = Scouting();
+	//Scouting scouting = Scouting();
 	// Hello World!
 	Broodwar->sendText("TEST");
 	// Print the map name.
@@ -74,7 +74,7 @@ void ExampleAIModule::onStart()
 			Broodwar << "The matchup is " << Broodwar->self()->getRace() << " vs " << Broodwar->enemy()->getRace() << std::endl;
 	}
 	StrategyManager::Instance().Start();
-	war = new WarManager(5);
+	//war = new WarManager(5);
 }
 
 void ExampleAIModule::onEnd(bool isWinner)
@@ -104,7 +104,7 @@ void ExampleAIModule::onFrame()
 		return;
 	
 	StrategyManager::Instance().Update();
-	war->Update();
+	//war->Update();
 	
 	/*
 	// Iterate through all the units that we own
@@ -380,5 +380,5 @@ void ExampleAIModule::onUnitComplete(BWAPI::Unit unit)
 			BuildingManager::Instance().OnBuildingComplete(unit);
 		}
 	}
-	war->Update(unit);
+	//war->Update(unit);
 }

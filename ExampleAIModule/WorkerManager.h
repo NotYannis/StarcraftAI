@@ -2,11 +2,12 @@
 
 #include "Common.h"
 #include "OrderQueue.h"
+#include <vector>
 
 class WorkerManager
 {
 public:
-	OrderQueue* orderQueue;
+	//OrderQueue* orderQueue;
 
 	std::map <Unit, Card *> workersJob;
 
@@ -28,11 +29,7 @@ public:
 	Unit * GetClosestWorkerGas(PositionOrUnit pos);
 	Unit GetClosestWorkerScout(PositionOrUnit pos);
 
-	void SetWorkerIdle(Unit u);
-	void SetWorkerCristal(Unit u);
-	void SetWorkerBuilder(Unit u);
-	void SetWorkerGas(Unit u);
-	void SetWorkerScout(Unit u);
+	void SetWorker(Unit u, Unit* workersType, int &workersTypeCount);
 
 	void HandleWorkersCristal();
 	void HandleWorkersGas();
