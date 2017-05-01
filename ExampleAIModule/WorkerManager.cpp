@@ -1,7 +1,6 @@
 #include "WorkerManager.h"
 #include "StrategyManager.h"
-
-
+int cpt = 0;
 WorkerManager::WorkerManager()
 {
 	workersGas = new Unit[20];		wGasCount = new int(0);
@@ -54,8 +53,8 @@ void WorkerManager::RemoveWorker(Unit u, Unit * workersList, int * workersCount)
 	int found = false;
 
 	//Search for the nearest worker 
-	for (int i = 0; i < *workersCount; ++i){
-		if (workersList[i] == u){
+	for (int i = 0; i < *workersCount; ++i) {
+		if (workersList[i] == u) {
 			found = true;
 		}
 		if (found){
@@ -63,13 +62,23 @@ void WorkerManager::RemoveWorker(Unit u, Unit * workersList, int * workersCount)
 		}
 	}
 
-	--workersCount;
+	--*workersCount;
 }
 
 ///<summary>Set a worker in the given array</summary>
-void WorkerManager::SetWorker(Unit u, Unit * workersList, int * workersCount) {
+void WorkerManager::AddWorker(Unit u, Unit * workersList, int * workersCount) {
 	workersList[*workersCount] = u;
 	++*workersCount;
+}
+
+///<summary>Search a worker in the given array</summary>
+bool WorkerManager::SearchWorker(Unit u, Unit * workersList, int * workersCount) {
+	for (int i = 0; i < *workersCount; ++i) {
+		if (workersList[i] == u) {
+			return true;
+		}
+	}
+	return false;
 }
 
 void WorkerManager::HandleWorkersIdle() {
@@ -80,7 +89,7 @@ void WorkerManager::HandleWorkersIdle() {
 		if (u->getType().isWorker()) {
 			if (u->isIdle()){
 				workersIdle[*wIdleCount] = u;
-				++wIdleCount;
+				++*wIdleCount;
 			}
 		}
 	}
@@ -112,231 +121,87 @@ void WorkerManager::HandleWorkersGas() {
 }
 
 void WorkerManager::HandleWorkerScout() {
-
 	if (*orderQueue->scoutCardsCount > 0) {
+		//Broodwar << "Number of Scout Cards : " << *orderQueue->scoutCardsCount << std::endl;
 		ScoutCard * c = orderQueue->GetHighestPriorityScoutCard();
+		if (*wScoutCount > 0) {
+			//Broodwar << "Number of Builder Workers : " << *wBuilderCount << std::endl;
+			for (int i = 0; i < *wScoutCount; ++i) {
+				if (workersScout[i]->isIdle()) {
 
-		if (!c->onUse && c->priority != -1) {
-			if (*wScoutCount > 0) {
-				//if (c->unit->isIdle()) {
-					if (c->unit->getPosition() != c->target) {
-						c->unit->move(c->target);
+					/*Broodwar << "Priority : " << c->priority << std::endl;
+					Broodwar << "Target : " << c->target << std::endl;
+					Broodwar << "TilePosition : " << c->tilePosition << std::endl;
+					Broodwar << "Mineral Price : " << c->mineralPrice << std::endl;
+					Broodwar << "Gas Price : " << c->gasPrice << std::endl;*/
+
+					if (workersScout[i]->getPosition() != c->target) {
+						workersScout[i]->move(c->target);
+						c->onUse = true;
 					}
 					else {
-						orderQueue->RemoveCard(c, orderQueue->scoutCards, orderQueue->scoutCardsCount);
+						orderQueue->RemoveScoutCard(c);
 					}
-				//}
-				c->onUse = true;
-			}
-			else if (*wCristalCount > 0) {
-				Unit u = GetClosestWorker(c->target, workersCristal, wCristalCount);
-				u->stop();
-				RemoveWorker(u, workersCristal, wCristalCount);
-				SetWorker(u, workersScout, wScoutCount);
+				}
 			}
 		}
+		else if (*wCristalCount > 0) {
+			Unit u = GetClosestWorker(c->target, workersCristal, wCristalCount);
+			//Broodwar << u << std::endl;
+			u->stop();
+			RemoveWorker(u, workersCristal, wCristalCount);
+			AddWorker(u, workersScout, wScoutCount);
+		}
 	}
-
-
-
-	/*	if (*wScoutCount > 0)
-	{
-	/*SetWorkerToJob(c->unit, c);
-	SetWorkerScout(c->unit);*/
-	//Unit* u = GetClosestWorker(workersScout, wScoutsCount, c->tilePosition);
-	/*			SetWorker(c->unit, workersScout, wScoutCount);
-	}
-	/*else if (*workersCristal > 0)
-	{
-	/*SetWorkerToJob(c->unit, c);
-	SetWorkerScout(c->unit);*/
-	/*Unit* u = GetClosestWorker(workersCristal, wCristalsCount, c->target);
-	RemoveWorker(workersCristal, wCristalsCount, *u);
-	SetWorker(c->unit, workersScout, wScoutsCount);
-
-	}*/
-	/*		c->onUse = true;
-	}
-	/*else
-	{
-	if (c->unit->getPosition() != c->target)
-	{
-	if (c->unit->isIdle()) {
-	c->unit->move(c->target);
-	//get unit enemy aux alentours
-	// si unit alentours pas vide
-	//si batiment alors enregistrer position enemy
-	}
-	}
-	/*else
-	{
-	orderQueue->RemoveCard(c, orderQueue->scoutCards, orderQueue->scoutCardsCount);
-	}*/
-	//}
-	//}
 }
 
 void WorkerManager::HandleWorkersBuilder() {
-	for (int i = 0; i < *wBuilderCount; ++i) {
-		if (workersBuilder[i]->isIdle()) {
-			//Card * job = workersJob.at(workersBuilder[i]);
+	if (*orderQueue->buildCardsCount > 0) {
+		//Broodwar << "Number of Build Cards : " << *orderQueue->buildCardsCount << std::endl;
+		BuildCard * c = orderQueue->GetHighestPriorityBuildCard();
+		if (*wBuilderCount > 0) {
+			//Broodwar << "Number of Builder Workers : " << *wBuilderCount << std::endl;
+			for (int i = 0; i < *wBuilderCount; ++i) {
+				if (workersBuilder[i]->isIdle()) {
 
-			BuildCard * c = orderQueue->GetHighestPriorityBuildCard();
-			workersBuilder[i]->build(c->target, c->tilePosition);
-			//workersBuilder[i]->build(job->target, job->pos);
+					/*Broodwar << "Priority : " << c->priority << std::endl;
+					Broodwar << "Target : " << c->target << std::endl;
+					Broodwar << "TilePosition : " << c->tilePosition << std::endl;
+					Broodwar << "Mineral Price : " << c->mineralPrice << std::endl;
+					Broodwar << "Gas Price : " << c->gasPrice << std::endl;*/
+
+					static int lastChecked = 0;
+
+					if (lastChecked + 400 < Broodwar->getFrameCount() &&
+						Broodwar->self()->incompleteUnitCount(c->target) == 0 &&
+						!c->onUse && c->priority != -1 &&
+						Broodwar->self()->gas() >= c->gasPrice &&
+						Broodwar->self()->minerals() >= c->mineralPrice) { //ECHANGER CE IF AVEC CELUI DU DESSUS POUR NE PRENDRE UN WORKERCRISTAL QUE QD ON A LES RESSOURCES MAIS CA PLANTE DE OUFZER
+
+						lastChecked = Broodwar->getFrameCount();
+						//Broodwar << "Builder Workers currently Building" << std::endl;
+						workersBuilder[i]->build(c->target, c->tilePosition);
+						c->onUse = true;
+						//IL FAUT REMOVE LA CARTE UNE FOIS QUE LE BUILDING COMMENCE A ETRE CONSTRUIT
+						//orderQueue->RemoveBuildCard(c);
+					}
+				}
+			}
+		}
+		else if (*wCristalCount > 0) {
+			Unit u = GetClosestWorker((Position)c->tilePosition, workersCristal, wCristalCount);
+			//Broodwar << u << std::endl;
+			u->stop();
+			RemoveWorker(u, workersCristal, wCristalCount);
+			AddWorker(u, workersBuilder, wBuilderCount);
 		}
 	}
 }
 
-void WorkerManager::SetWorkerToJob(Unit u, BaseCard * c){
-	workersJob.insert(std::pair<Unit, BaseCard * >(u, c));
+void WorkerManager::SetWorkerToJob(Unit u, Card * c){
+	workersJob.insert(std::pair<Unit, Card * >(u, c));
 }
 
-void WorkerManager::removeCard(Unit u, BaseCard * c){
+void WorkerManager::removeCard(Unit u, Card * c){
 
 }
-
-/*Unit * WorkerManager::GetClosestWorkerIdle(PositionOrUnit pos){
-double distance = 20000;
-Unit * u;
-int index = 0;
-
-//Search for the nearest worker
-for (int i = 0; i < wIdleCount; ++i){
-if (workersIdle[i]->getDistance(pos) < distance){
-distance = workersIdle[i]->getDistance(pos);
-u = &workersIdle[i];
-index = i;
-}
-}
-
-//Reorganize the array
-if (index != wIdleCount - 1 && wIdleCount > 1){
-for (int i = index; i < wIdleCount; ++i){
-workersIdle[i] = workersIdle[i + 1];
-}
-}
---wIdleCount;
-
-return u;
-}
-
-Unit WorkerManager::GetClosestWorkerCristal(PositionOrUnit pos){
-double distance = 20000;
-Unit u;
-int index = 0;
-
-//Search for the nearest worker
-for (int i = 0; i < wCristalsCount; ++i){
-workersCristal[i]->stop();
-if (workersCristal[i]->getDistance(pos) < distance){
-distance = workersCristal[i]->getDistance(pos);
-u = workersCristal[i];
-index = i;
-}
-}
-
-//Reorganize the array
-for (int i = index; i < wCristalsCount; ++i){
-workersCristal[i] = Unit();
-workersCristal[i] = workersCristal[i + 1];
-}
-
---wCristalsCount;
-return u;
-}
-
-Unit WorkerManager::GetClosestWorkerBuilder(PositionOrUnit pos){
-double distance = 20000;
-Unit u;
-int index = 0;
-
-//Search for the nearest worker
-for (int i = 0; i < wBuildersCount; ++i){
-if (workersBuilder[i]->getDistance(pos) < distance){
-distance = workersBuilder[i]->getDistance(pos);
-u = workersBuilder[i];
-index = i;
-}
-}
-
-//Reorganize the array
-if (index != wBuildersCount - 1){
-for (int i = index; i < wBuildersCount; ++i){
-workersBuilder[i] = workersBuilder[i + 1];
-}
-}
---wBuildersCount;
-
-return u;
-}
-
-Unit * WorkerManager::GetClosestWorkerGas(PositionOrUnit pos){
-double distance = 20000;
-Unit * u;
-int index = 0;
-
-//Search for the nearest worker
-for (int i = 0; i < wGasCount; ++i){
-if (workersGas[i]->getDistance(pos) < distance){
-distance = workersGas[i]->getDistance(pos);
-u = &workersGas[i];
-index = i;
-}
-}
-
-//Reorganize the array
-if (index != wGasCount - 1){
-for (int i = index; i < wGasCount; ++i){
-workersGas[i] = workersGas[i + 1];
-}
-}
---wGasCount;
-
-return u;
-}
-
-Unit WorkerManager::GetClosestWorkerScout(PositionOrUnit pos){
-double distance = 20000;
-Unit u;
-int index = 0;
-
-//Search for the nearest worker
-for (int i = 0; i < wScoutsCount; ++i){
-if (workersScout[i]->getDistance(pos) < distance){
-distance = workersScout[i]->getDistance(pos);
-u = workersScout[i];
-index = i;
-}
-}
-
-//Reorganize the array
-if (index != wScoutsCount - 1){
-for (int i = index; i < wScoutsCount; ++i){
-workersScout[i] = workersScout[i + 1];
-}
-}
---wScoutsCount;
-
-return u;
-}*/
-
-/*void WorkerManager::SetWorkerCristal(Unit u){
-workersCristal[wCristalsCount] = u;
-++wCristalsCount;
-}
-
-void WorkerManager::SetWorkerBuilder(Unit u){
-workersBuilder[wBuildersCount] = u;
-++wBuildersCount;
-}
-
-void WorkerManager::SetWorkerGas(Unit u){
-workersGas[wGasCount] = u;
-++wGasCount;
-}
-
-void WorkerManager::SetWorkerScout(Unit u){
-workersScout[wScoutsCount] = u;
-++wScoutsCount;
-}*/

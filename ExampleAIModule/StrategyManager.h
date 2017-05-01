@@ -9,7 +9,7 @@ class StrategyManager
 {
 public:
 	Unit cargo;
-	BaseCard * workingCards;
+	Card * workingCards;
 
 	OrderQueue * orderQueue;
 	WorkerManager * workerManager;
@@ -23,5 +23,5 @@ public:
 
 	void Start();
 	void Update();
-	void CardDone(BaseCard * c);
+	void CardDone(Card * c);
 };

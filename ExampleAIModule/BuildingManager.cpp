@@ -10,7 +10,7 @@ BuildingManager::BuildingManager()
 
 BuildingManager::~BuildingManager()
 {
-
+	delete orderQueue;
 }
 
 BuildingManager & BuildingManager::Instance(){
@@ -19,7 +19,7 @@ BuildingManager & BuildingManager::Instance(){
 }
 
 void BuildingManager::GetNextCard(){
-	if (orderQueue->buildCardsCount > 0) {
+	//if (orderQueue->buildCardsCount > 0) {
 		/*Card * c = OrderQueue::Instance().getHighestPriority(build);
 		
 		if (!c->blocking && c->priority != -1 && Broodwar->self()->minerals() - ressourcesNeeded > c->target.mineralPrice()){
@@ -30,7 +30,7 @@ void BuildingManager::GetNextCard(){
 			WorkerManager::Instance().SetWorkerToJob(u, c);
 			WorkerManager::Instance().SetWorkerBuilder(u);
 		}*/
-	}
+	//}
 }
 
 void BuildingManager::OnBuildingCreate(Unit u){
@@ -55,7 +55,7 @@ void BuildingManager::OnBuildingComplete(Unit u){
 
 		//orderQueue->RemoveCard(orderQueue->GetHighestPriority(orderQueue->buildCards, orderQueue->buildCardsCount)));
 
-		orderQueue->RemoveCard(c, orderQueue->buildCards, orderQueue->buildCardsCount);
+		//orderQueue->RemoveCard(c, *orderQueue->buildCards, orderQueue->buildCardsCount);
 
 		//Card * c2 = OrderQueue::Instance().getSecondHighestPriority(build);
 

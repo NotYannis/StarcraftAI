@@ -2,7 +2,7 @@
 
 StrategyManager::StrategyManager()
 {
-	workingCards = new BaseCard[100]; workingCardsCount = 0;
+	workingCards = new Card[100]; workingCardsCount = 0;
 	orderQueue = &OrderQueue().Instance();
 	workerManager = &WorkerManager().Instance();
 
@@ -32,7 +32,7 @@ void StrategyManager::Start() {
 	
 	for (auto & u : Broodwar->self()->getUnits()) {
 		if (u->getType().isWorker()) {
-			workerManager->SetWorker(u, workerManager->workersCristal, workerManager->wCristalCount);
+			workerManager->AddWorker(u, workerManager->workersCristal, workerManager->wCristalCount);
 		}
 	}
 
@@ -47,38 +47,38 @@ void StrategyManager::Start() {
 	{
 		if (tilePosition != Broodwar->self()->getStartLocation()) {
 
-			ScoutCard scoutCard = ScoutCard(priority,
-				workerManager->GetClosestWorker(cargo, workerManager->workersCristal, workerManager->wCristalCount),
-				(Position)tilePosition);
+			ScoutCard * scoutCard = new ScoutCard(priority, (Position)tilePosition);
 
-			orderQueue->AddCard(scoutCard, orderQueue->scoutCards, orderQueue->scoutCardsCount);
+			orderQueue->AddScoutCard(scoutCard);
 			++priority;
-
 		}
 	}
 
 	Broodwar << "Number of Scout Cards : " << *orderQueue->scoutCardsCount << std::endl;
 
-	Position pylonPos = (Position)Broodwar->getBuildLocation(UnitTypes::Protoss_Pylon, cargo->getTilePosition());
-	
-	BuildCard buildCard = BuildCard(20,
-		workerManager->GetClosestWorker(pylonPos, workerManager->workersCristal, workerManager->wCristalCount),
-		UnitTypes::Protoss_Pylon, Broodwar->getBuildLocation(UnitTypes::Protoss_Pylon, cargo->getTilePosition()));
+	BuildCard * pylon = new BuildCard(20, UnitTypes::Protoss_Pylon, 
+		Broodwar->getBuildLocation(UnitTypes::Protoss_Pylon, cargo->getTilePosition()));
+	orderQueue->AddBuildCard(pylon);
 
-	orderQueue->AddCard(buildCard, orderQueue->buildCards, orderQueue->buildCardsCount);
+	/*BuildCard * gateway = new BuildCard(19, UnitTypes::Protoss_Gateway,
+		Broodwar->getBuildLocation(UnitTypes::Protoss_Gateway, cargo->getTilePosition()));
+	orderQueue->AddBuildCard(gateway);*/
 
 	Broodwar << "Number of Build Cards : " << *orderQueue->buildCardsCount << std::endl;
 
 }
 
 void StrategyManager::Update(){
-	WorkerManager::Instance().HandleWorkerScout();
-	//WorkerManager::Instance().HandleWorkersBuilder();
-	WorkerManager::Instance().HandleWorkersCristal();
+	//SCOUT ET BUILD FONCTIONNENT SEPAREMENT MAIS PAS ENCORE ENSEMBLE
+	//COMMENTER L'UN POUR TESTER L'AUTRE
+	//workerManager->HandleWorkerScout();
+	workerManager->HandleWorkersBuilder();
+	workerManager->HandleWorkersCristal();
+	//workerManager->HandleWorkersIdle();
 	//BuildingManager::Instance().GetNextCard();
 }
 
-void StrategyManager::CardDone(BaseCard * card) {
+void StrategyManager::CardDone(Card * card) {
 	bool found = false;
 
 	for (int i = 0; i < *workingCardsCount; ++i) {

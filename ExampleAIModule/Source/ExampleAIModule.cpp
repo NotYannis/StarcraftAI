@@ -8,7 +8,7 @@
 using namespace BWAPI;
 using namespace Filter;
 
-bool firstDepot = false;
+//bool firstDepot = false;
 //bool stopProduction = false;
 //int workersOnGas = 0;
 //WarManager *war;
@@ -325,7 +325,7 @@ void ExampleAIModule::onUnitHide(BWAPI::Unit unit)
 
 void ExampleAIModule::onUnitCreate(BWAPI::Unit unit)
 {
-	if (Broodwar->isReplay())
+	/*if (Broodwar->isReplay())
 	{
 		// if we are in a replay, then we will print out the build order of the structures
 		if (unit->getType().isBuilding() && !unit->getPlayer()->isNeutral())
@@ -339,7 +339,7 @@ void ExampleAIModule::onUnitCreate(BWAPI::Unit unit)
 
 	if (firstDepot && unit->getType().isBuilding() && unit->getPlayer() == Broodwar->self()){
 		BuildingManager::Instance().OnBuildingCreate(unit);
-	}
+	}*/
 }
 
 void ExampleAIModule::onUnitDestroy(BWAPI::Unit unit)
@@ -372,13 +372,13 @@ void ExampleAIModule::onSaveGame(std::string gameName)
 
 void ExampleAIModule::onUnitComplete(BWAPI::Unit unit)
 {
-	if (unit->getType().isBuilding() && unit->getPlayer() == Broodwar->self()){
+	/*if (unit->getType().isBuilding() && unit->getPlayer() == Broodwar->self()){
 		if (!firstDepot){
 			firstDepot = true;
 		}
 		else{
 			BuildingManager::Instance().OnBuildingComplete(unit);
 		}
-	}
+	}*/
 	//war->Update(unit);
 }
